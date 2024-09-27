@@ -22,6 +22,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct goodthingshappen2App: App {
     
+    @StateObject var appState = AppState()
+    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var sharedModelContainer: ModelContainer = {
@@ -41,6 +43,7 @@ struct goodthingshappen2App: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(appState)
         }
         .modelContainer(sharedModelContainer)
     }

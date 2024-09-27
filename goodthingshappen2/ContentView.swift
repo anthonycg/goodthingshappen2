@@ -10,11 +10,12 @@ import SwiftData
 import FirebaseAuth
 
 struct ContentView: View {
+    @EnvironmentObject var appState: AppState
     @Environment(\.modelContext) private var modelContext
     @Query private var notes: [Note]
 
     var body: some View {
-        if ((Auth.auth().currentUser == nil)) {
+        if (!appState.isLoggedIn) {
             LandingView()
         } else {
             MyNotesView()
