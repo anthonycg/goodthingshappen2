@@ -41,14 +41,14 @@ struct FeedListItem: View {
                         .font(.title3)
                         .lineLimit(1)
                     
-                    HStack(spacing: 30) {
+                    HStack(spacing: 10) {
                         // Like/Unlike Button
                         Button(action: {
                             toggleLike(for: currentUserId)
                         }) {
                             Image(systemName: userHasLikedPost ? "heart.fill" : "heart")
                                 .font(.system(size: 20))
-                                .foregroundColor(userHasLikedPost ? .red : .black)
+                                .foregroundColor(userHasLikedPost ? .promPink : .black)
                         }
                         
                         // Display the number of likes

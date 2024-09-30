@@ -20,12 +20,12 @@ struct NoteListItem: View {
                     .foregroundStyle(
                         LinearGradient(colors: [.lightTeaGreen, .teaGreen], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
-                    .frame(maxWidth: .infinity, minHeight: 255, maxHeight: 255)  // Use maxWidth
-                    .padding()
+                    .frame(maxWidth: .infinity, minHeight: 225, maxHeight: 225)  // Use maxWidth
+                    .padding(.bottom)
                 
                 VStack(alignment: .leading) {
                     Text(note.postTitle.isEmpty ? "Untitled" : note.postTitle)
-                        .frame(width: 330, height: 200, alignment: .bottomLeading)
+                        .frame(width: 330, height: 150, alignment: .bottomLeading)
                         .foregroundStyle(Color.black)
                         .font(.largeTitle)
                         .lineLimit(2)

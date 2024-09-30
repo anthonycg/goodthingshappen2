@@ -22,7 +22,7 @@ struct AddNewNote: View {
                 TextField("Title your day...", text: $postTitle, axis: .vertical)
                     .font(.system(size: 40))
                     .lineLimit(3)
-                    .padding()
+                    .padding([.leading, .trailing])
                 
                 Spacer()
                 
@@ -46,11 +46,11 @@ struct AddNewNote: View {
                     VStack {
                         TextField("Write about the details of today...", text: $postBody, axis: .vertical)
                             .lineLimit(16)
-                            .padding([.top, .bottom], 40)  // Add padding inside the TextField
+                            .padding([.top, .bottom], 30)  // Add padding inside the TextField
                             .background(Color.green.opacity(0))  // Set background color
                             .cornerRadius(10)  // Apply corner radius for a smooth look
                             }
-                            .padding()
+//                            .padding()
 
                         // Icon buttons at the bottom
                         HStack(spacing: 30) {

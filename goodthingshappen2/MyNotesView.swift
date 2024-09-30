@@ -84,7 +84,7 @@ struct MyNotesView: View {
                             .clipShape(Circle())
                             .shadow(radius: 10)
                     }
-                    .sheet(isPresented: $isAddingNewNote) {
+                    .fullScreenCover(isPresented: $isAddingNewNote) {
                         // Consider adding parameters if necessary
                         AddNewNote(postTitle: "", postBody: "")
                     }
