@@ -7,9 +7,11 @@
 
 import SwiftUI
 import SwiftData
+import RevenueCat
+import RevenueCatUI
 
 struct MyNotesView: View {
-    @Query var notes: [Note]
+    @Query var notes: [Note3]
     @State var isAddingNewNote: Bool = false
     @State var isShowingPaywall: Bool = false
     
@@ -22,22 +24,23 @@ struct MyNotesView: View {
                     HStack {
                         Image(systemName: "figure.wave.circle.fill")
                         Text("Hello there")
-                            .frame(width: 340, alignment: .leading)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding()
                     
                     Text("My \nNotes")
-                        .frame(width: 375, height: 200, alignment: .leading)
-                        .padding()
-                        .frame(width: 400, alignment: .leading)
                         .foregroundColor(.black)
                         .font(.system(size: 80))
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    List {
+                    // Use a VStack instead of List
+                    VStack {
                         ForEach(notes) { note in
                             NoteListItem(note: note)
                         }
                     }
+                    .padding(.horizontal)
                 }
             }
             
@@ -60,11 +63,12 @@ struct MyNotesView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .background(Color.purple)
+                        .background(Color.promPink)
                         .clipShape(Capsule())
-                        .shadow(radius: 10)
+                        .shadow(color: Color.pinkLace, radius: 4, y: 12)
                     }
-                    .sheet(isPresented: $isShowingPaywall) { AddNewNote(postTitle: "", postBody: "")
+                    .sheet(isPresented: $isShowingPaywall) {
+                        PaywallView(displayCloseButton: true)
                     }
                     .padding(.trailing, 10)
                     
@@ -76,11 +80,13 @@ struct MyNotesView: View {
                             .font(.system(size: 24))
                             .foregroundColor(.white)
                             .padding()
-                            .background(Color.green)
+                            .background(Color.accentColor)
                             .clipShape(Circle())
                             .shadow(radius: 10)
                     }
-                    .sheet(isPresented: $isAddingNewNote) { AddNewNote(postTitle: "", postBody: "")
+                    .sheet(isPresented: $isAddingNewNote) {
+                        // Consider adding parameters if necessary
+                        AddNewNote(postTitle: "", postBody: "")
                     }
                     .padding()
                 }
@@ -92,4 +98,3 @@ struct MyNotesView: View {
 #Preview {
     MyNotesView()
 }
-

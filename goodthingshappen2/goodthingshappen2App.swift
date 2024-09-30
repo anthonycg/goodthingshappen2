@@ -9,14 +9,19 @@ import SwiftUI
 import SwiftData
 import FirebaseCore
 import FirebaseAuth
+import RevenueCat
 
 class AppDelegate: NSObject, UIApplicationDelegate {
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    FirebaseApp.configure()
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
 
-    return true
-  }
+        // Configure RevenueCat
+        Purchases.logLevel = .debug
+        Purchases.configure(withAPIKey: "appl_kADUlQVYqqQCBQPNjYjfglNUHQp")
+
+        return true
+    }
 }
 
 @main
@@ -28,10 +33,10 @@ struct goodthingshappen2App: App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Note.self,
-            User.self
+            Note3.self,
+            User2.self
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(schema: schema)
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])

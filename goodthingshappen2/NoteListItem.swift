@@ -8,28 +8,42 @@
 import SwiftUI
 
 struct NoteListItem: View {
-    var note: Note
+    var note: Note3
+    @State var isEditingNote: Bool = false
+    
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 30)
-                .foregroundStyle(Color.gray)
-                .frame(width: .infinity, height: 250)
-                .padding()
-            Text("This is a test title")
-                .foregroundStyle(Color.black)
-                .font(.largeTitle)
-                .frame(width: 320, height: 180, alignment: .bottomLeading)
-                .lineLimit(1)
-            Text("This is a test body summary and I want to show quite a bit of text here")
-                .foregroundStyle(Color.black)
-                .font(.title3)
-                .frame(width: 320, height: 250, alignment: .bottomLeading)
-                .lineLimit(1)
-            
+        Button(action: {
+            isEditingNote = true
+        }) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 30)
+                    .foregroundStyle(
+                        LinearGradient(colors: [.lightTeaGreen, .teaGreen], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 255, maxHeight: 255)  // Use maxWidth
+                    .padding()
+                
+                VStack(alignment: .leading) {
+                    Text(note.postTitle.isEmpty ? "Untitled" : note.postTitle)
+                        .frame(width: 330, height: 200, alignment: .bottomLeading)
+                        .foregroundStyle(Color.black)
+                        .font(.largeTitle)
+                        .lineLimit(2)
+                    
+                    Text(note.postBody.isEmpty ? "No details yet." : note.postBody) 
+                        .frame(width: 330, height: 30, alignment: .bottomLeading)
+                        .foregroundStyle(Color.black)
+                        .font(.title3)
+                        .lineLimit(1)
+                }
+            }
+        }
+        .sheet(isPresented: $isEditingNote) {
+            EditNoteView(note: note)
         }
     }
 }
 
 #Preview {
-    NoteListItem(note: Note(postTitle: "Test", postBody: "bodytest"))
+    NoteListItem(note: Note3(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf"))
 }

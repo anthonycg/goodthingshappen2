@@ -6,12 +6,19 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import SwiftData
 
 struct ProfileView: View {
     @State var isEditProfileShowing: Bool = false
+    @Environment(\.modelContext) var modelContext
+    @Query var notes: [Note3]
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ZStack {
+            Color.champagnePink.ignoresSafeArea()
+            
             VStack {
                 Spacer()
                 
@@ -49,14 +56,13 @@ struct ProfileView: View {
                 Spacer()
                 
                 // Additional Information
-                Text("Good Things written | 5")
+                Text("Good Things written | \(notes.count)")
                     .padding(.bottom, 10)
                 
                 // Contact Us and Logout Buttons
                 HStack {
                     Button(action: {
                        if let url = URL(string: "mailto:anthonygibson24@gmail.com?subject=Good Things Happen Feedback") {
-                            // Check if the device can open the URL
                             if UIApplication.shared.canOpenURL(url) {
                                 UIApplication.shared.open(url)
                             } else {
@@ -71,7 +77,7 @@ struct ProfileView: View {
                     Spacer()
                     
                     Button(action: {
-                        // Logout action
+                        logout()
                     }) {
                         Text("Logout")
                             .foregroundColor(.red)
@@ -79,17 +85,24 @@ struct ProfileView: View {
                 }
                 .padding(.horizontal, 50)
                 
-                // Tab Bar Placeholder
                 Spacer()
             }
             .padding(.top, 40)
-            .background(Color(UIColor.systemGroupedBackground))
-            .edgesIgnoringSafeArea(.all)
+        }
+    }
+    
+    func logout() {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+            appState.isLoggedIn = false
+        } catch let signOutError as NSError {
+            print("Error signing out: %@", signOutError)
         }
     }
 }
 
-
 #Preview {
     ProfileView()
 }
+

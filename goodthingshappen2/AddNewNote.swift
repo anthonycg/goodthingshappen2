@@ -13,21 +13,21 @@ struct AddNewNote: View {
     @State var postBody: String
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @Query var notes: [Note]
+    @Query var notes: [Note3]
     
     var body: some View {
         ZStack {
             Color.champagnePink.ignoresSafeArea()
             VStack {
                 TextField("Title your day...", text: $postTitle, axis: .vertical)
-                    .font(.system(size: 50))
-                    .lineLimit(4)
+                    .font(.system(size: 40))
+                    .lineLimit(3)
                     .padding()
                 
                 Spacer()
                 
                 VStack {
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 2) {
                         // Top section with title and icon
                         HStack {
                             Image(systemName: "pencil.line")
@@ -40,13 +40,13 @@ struct AddNewNote: View {
                             
                         }
                         .padding(.top, 10)
-                        .padding(.horizontal)
+//                        .padding(.horizontal)
 
                         // Text section
                     VStack {
                         TextField("Write about the details of today...", text: $postBody, axis: .vertical)
-                            .lineLimit(8)
-                            .padding([.top, .bottom], 60)  // Add padding inside the TextField
+                            .lineLimit(16)
+                            .padding([.top, .bottom], 40)  // Add padding inside the TextField
                             .background(Color.green.opacity(0))  // Set background color
                             .cornerRadius(10)  // Apply corner radius for a smooth look
                             }
@@ -81,7 +81,7 @@ struct AddNewNote: View {
                         .padding()
                         .background(Color.black.opacity(0.05))
                         .cornerRadius(20)
-                        .padding(.bottom)
+//                        .padding(.bottom)
                         
                     }
                     .padding()
@@ -99,13 +99,25 @@ struct AddNewNote: View {
 
         }
     func saveNote() {
-        let note = Note(postTitle: postTitle, postBody: postBody)
+        guard !postTitle.isEmpty, !postBody.isEmpty else {
+            print("Title and body cannot be empty")
+            return
+        }
+        
+        let note = Note3(postTitle: postTitle, postBody: postBody)
+        print(note)
         modelContext.insert(note)
-        try? modelContext.save()
+        do {
+            try modelContext.save()
+            } catch {
+                print("Failed to insert note")
+        }
         dismiss()
     }
+
     }
 
 #Preview {
-    AddNewNote(postTitle: "test title", postBody: "test body")
+    AddNewNote(postTitle: "", postBody: "")
+        .modelContainer(for: [Note3.self, User2.self ])
 }

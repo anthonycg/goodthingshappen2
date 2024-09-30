@@ -12,7 +12,7 @@ struct EditProfileView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     @State private var NotificationsOn: Bool = false
-    @Query var users: [User]
+    @Query var users: [User2]
     @State private var name: String = ""
     @State private var email: String = ""
     @State private var phone: String = ""
@@ -29,14 +29,14 @@ struct EditProfileView: View {
 
                 Spacer()
 
-                if let firstUser = users.first {
+                let firstUser = users.first
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Name")
                             .foregroundStyle(.gray)
 
                         TextField("Name", text: $name)
                             .onAppear {
-                                name = firstUser.name
+                                name = firstUser?.name ?? ""
                             }
                         Divider()
                             .background(Color.black)
@@ -46,7 +46,7 @@ struct EditProfileView: View {
 
                         TextField("Email", text: $email)
                             .onAppear {
-                                email = firstUser.email
+                                email = firstUser?.email ?? ""
                             }
                         Divider()
                             .background(Color.black)
@@ -73,19 +73,13 @@ struct EditProfileView: View {
                         Spacer()
                     }
                     .padding()
-                } else {
-                    Text("No user found")
-                    Button("Test", action: {
-                        print(users)
-                    })
-                    .padding()
-                }
+                
             }
             .padding()
         }
     }
 
-    func updateUser(_ user: User) {
+    func updateUser(_ user: User2) {
         user.name = name
         user.email = email
 

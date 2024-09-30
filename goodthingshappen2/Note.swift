@@ -1,5 +1,5 @@
 //
-//  Item.swift
+//  Note.swift
 //  goodthingshappen2
 //
 //  Created by Anthony Gibson on 9/21/24.

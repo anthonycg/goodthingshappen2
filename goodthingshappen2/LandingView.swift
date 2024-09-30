@@ -12,9 +12,10 @@ import AuthenticationServices
 import FirebaseAuth
 
 struct LandingView: View {
+    @EnvironmentObject var appState: AppState
     @State private var currentNonce: String?
     @Environment(\.modelContext) var modelContext
-    @Query var users: [User]
+    @Query var users: [User2]
     
     var body: some View {
         ZStack {
@@ -49,6 +50,7 @@ struct LandingView: View {
                             switch result {
                             case .success(let authorization):
                                 handleAuthorization(authorization)
+                                appState.isLoggedIn = true
                             case .failure(let error):
                                 print("Sign in with Apple failed: \(error.localizedDescription)")
                             }
@@ -127,7 +129,6 @@ struct LandingView: View {
         }
     }
 }
-
 
 #Preview {
     LandingView()
