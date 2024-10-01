@@ -40,7 +40,6 @@ struct LandingView: View {
                     
                     SignInWithAppleButton(
                         onRequest: { request in
-                            // Call the sign-in flow when the button is pressed
                             let nonce = randomNonceString()
                             currentNonce = nonce
                             request.requestedScopes = [.fullName, .email]
@@ -50,7 +49,6 @@ struct LandingView: View {
                             switch result {
                             case .success(let authorization):
                                 handleAuthorization(authorization)
-                                appState.isLoggedIn = true
                             case .failure(let error):
                                 print("Sign in with Apple failed: \(error.localizedDescription)")
                             }
@@ -104,9 +102,7 @@ struct LandingView: View {
             }
             
             // Create Firebase credential with Apple ID token
-            let credential = OAuthProvider.credential(providerID: .apple, idToken: idTokenString, rawNonce: nonce)
-            
-            OAuthProvider.appleCredential(withIDToken: idTokenString, rawNonce: nonce, fullName: appleIDCredential.fullName)
+            let credential = OAuthProvider.appleCredential(withIDToken: idTokenString, rawNonce: nonce, fullName: appleIDCredential.fullName)
             
             // Sign in with Firebase
             Auth.auth().signIn(with: credential) { authResult, error in
@@ -114,17 +110,24 @@ struct LandingView: View {
                     print("Firebase sign in with Apple failed: \(error.localizedDescription)")
                     return
                 }
-                let displayName = Auth.auth().currentUser?.displayName
+                let displayName = Auth.auth().currentUser?.displayName ?? "Guest"
+                let email = Auth.auth().currentUser?.email ?? ""
                 
-                let email = Auth.auth().currentUser?.email
+                guard let userId = Auth.auth().currentUser?.uid else {
+                    print("Error: User not authenticated")
+                    return
+                }
                 
-                let user = User(name: displayName ?? "Guest", email: email ?? "")
+                let user = User3(id: UUID(uuidString: userId)!, name: displayName, email: email)
                 
+                // Insert the user into the model context
                 modelContext.insert(user)
-                print(user)
                 try? modelContext.save()
                 
                 print("User signed in with Apple: \(authResult?.user.uid ?? "")")
+                
+                // Update the app state
+                appState.isLoggedIn = true
             }
         }
     }
