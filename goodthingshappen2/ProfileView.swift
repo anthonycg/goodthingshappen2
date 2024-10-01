@@ -12,7 +12,7 @@ import SwiftData
 struct ProfileView: View {
     @State var isEditProfileShowing: Bool = false
     @Environment(\.modelContext) var modelContext
-    @Query var notes: [Note3]
+    @Query var notes: [Note4]
     @EnvironmentObject var appState: AppState
     
     var body: some View {

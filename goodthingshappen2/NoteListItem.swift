@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct NoteListItem: View {
-    var note: Note3
+    var note: Note4
     @State var isEditingNote: Bool = false
     
     var body: some View {
@@ -45,5 +46,5 @@ struct NoteListItem: View {
 }
 
 #Preview {
-    NoteListItem(note: Note3(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf"))
+    NoteListItem(note: Note4(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf", ownerId: UUID()))
 }

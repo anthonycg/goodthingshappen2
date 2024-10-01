@@ -12,7 +12,7 @@ import SwiftData
 
 struct FeedView: View {
     @Environment(\.modelContext) var modelContext
-    @Query var notes: [Note3]
+    @Query var notes: [Note4]
     
     var body: some View {
         ZStack {
@@ -24,6 +24,7 @@ struct FeedView: View {
                 }
             }
         }
+//        .fullScreenCover(item: $hasPremium, content: PaywallView(displayCloseButton: false))
         
     }
 }

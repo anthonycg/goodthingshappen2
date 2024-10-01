@@ -12,7 +12,7 @@ struct EditProfileView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     @State private var NotificationsOn: Bool = false
-    @Query var users: [User2]
+    @Query var users: [User3]
     @State private var name: String = ""
     @State private var email: String = ""
     @State private var phone: String = ""
@@ -79,7 +79,7 @@ struct EditProfileView: View {
         }
     }
 
-    func updateUser(_ user: User2) {
+    func updateUser(_ user: User3) {
         user.name = name
         user.email = email
 

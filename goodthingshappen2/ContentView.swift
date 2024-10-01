@@ -12,8 +12,8 @@ import FirebaseAuth
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.modelContext) private var modelContext
-    @Query private var notes: [Note3]
-    @Query private var user: [User2]
+    @Query private var notes: [Note4]
+    @Query private var user: [User3]
 
     var body: some View {
         if (!appState.isLoggedIn) {
@@ -38,6 +38,6 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [Note3.self, User2.self], inMemory: false)
+        .modelContainer(for: [Note4.self, User3.self], inMemory: false)
         .environmentObject(AppState())
 }

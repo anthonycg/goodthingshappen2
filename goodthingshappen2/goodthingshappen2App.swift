@@ -33,12 +33,13 @@ struct goodthingshappen2App: App {
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Note3.self,
-            User2.self
+            Note4.self,
+            User3.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema)
-
         do {
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+//            container.deleteAllData()
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
             fatalError("Could not create ModelContainer: \(error)")

@@ -7,13 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseAuth
 
 struct AddNewNote: View {
     @State var postTitle: String
     @State var postBody: String
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
-    @Query var notes: [Note3]
+    @Query var notes: [Note4]
     
     var body: some View {
         ZStack {
@@ -103,8 +104,12 @@ struct AddNewNote: View {
             print("Title and body cannot be empty")
             return
         }
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("Error: User not authenticated")
+            return
+        }
         
-        let note = Note3(postTitle: postTitle, postBody: postBody)
+        let note = Note4(postTitle: postTitle, postBody: postBody, ownerId: UUID(uuidString: userId)!)
         print(note)
         modelContext.insert(note)
         do {
@@ -119,5 +124,5 @@ struct AddNewNote: View {
 
 #Preview {
     AddNewNote(postTitle: "", postBody: "")
-        .modelContainer(for: [Note3.self, User2.self ])
+        .modelContainer(for: [Note4.self, User3.self ])
 }

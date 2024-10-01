@@ -11,7 +11,7 @@ import RevenueCat
 import RevenueCatUI
 
 struct MyNotesView: View {
-    @Query var notes: [Note3]
+    @Query var notes: [Note4]
     @State var isAddingNewNote: Bool = false
     @State var isShowingPaywall: Bool = false
     

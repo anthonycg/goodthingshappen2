@@ -15,7 +15,7 @@ struct LandingView: View {
     @EnvironmentObject var appState: AppState
     @State private var currentNonce: String?
     @Environment(\.modelContext) var modelContext
-    @Query var users: [User2]
+    @Query var users: [User3]
     
     var body: some View {
         ZStack {

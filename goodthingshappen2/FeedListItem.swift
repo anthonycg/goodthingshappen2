@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct FeedListItem: View {
-    var note: Note3
+    var note: Note4
     @State var isViewingNote: Bool = false
     @State var userHasLikedPost: Bool = false
     @State var likes: [String] = []  
@@ -87,5 +87,5 @@ struct FeedListItem: View {
 }
 
 #Preview {
-    FeedListItem(note: Note3(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf"))
+    FeedListItem(note: Note4(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf", ownerId: UUID()))
 }
