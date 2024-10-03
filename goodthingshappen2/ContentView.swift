@@ -14,12 +14,14 @@ import RevenueCatUI
 struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.modelContext) private var modelContext
-    @Query private var notes: [Note4]
+    @Query private var notes: [Note6]
     @Query private var user: [User3]
+    
     @State private var showPaywall = false
+    @State private var hasPremium: Bool = false
 
     var body: some View {
-        if (!appState.isLoggedIn) {
+        if !appState.isLoggedIn {
             LandingView()
         } else {
             TabView {
@@ -28,15 +30,14 @@ struct ContentView: View {
                         Label("Notes", systemImage: "note.text")
                     }
                 
-                FeedView()
+                FeedAccessView(hasPremium: hasPremium)
                     .tabItem {
                         Label("Feed", systemImage: "newspaper")
                     }
                     .onAppear {
-                        checkSubscriptionStatus()
-                    }
-                    .fullScreenCover(isPresented: $showPaywall) {
-                        PaywallView(displayCloseButton: false)
+                        Task {
+                            await checkPremiumStatus()
+                        }
                     }
                 
                 ProfileView()
@@ -44,27 +45,58 @@ struct ContentView: View {
                         Label("Profile", systemImage: "person.icloud.fill")
                     }
             }
-        }
-    }
-
-    // Function to check the user's subscription status
-    func checkSubscriptionStatus() {
-        Task {
-            do {
-                let customerInfo = try await Purchases.shared.customerInfo()
-                if customerInfo.entitlements.all["premium"]?.isActive != true {
-                    showPaywall = true
-                }
-            } catch {
-                print("Failed to fetch customer info: \(error)")
+            .fullScreenCover(isPresented: $showPaywall) {
+                PaywallView( displayCloseButton: true, performRestore: {
+                    await performRestore() // Call the async function
+                })
             }
         }
     }
+
+    func performRestore() async -> (success: Bool, error: (any Error)?) {
+        do {
+
+            let restored = try await Purchases.shared.restorePurchases()
+            
+            // Check if restore was successful
+            if restored.entitlements.all["premium"]?.isActive == true {
+                showPaywall = false // Dismiss the paywall
+                return (true, nil)
+            } else {
+                return (false, nil) // Restore failed, but no error
+            }
+        } catch {
+            return (false, error) // Return the error if any occurred
+        }
+    }
+    
+    // Function to check the user's subscription status
+    func checkPremiumStatus() async {
+        do {
+            let customerInfo = try await Purchases.shared.customerInfo()
+            hasPremium = customerInfo.entitlements.all["premium"]?.isActive == true
+            if !hasPremium {
+                showPaywall = true
+            }
+        } catch {
+            print("Failed to check premium status: \(error)")
+        }
+    }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: [Note4.self, User3.self], inMemory: false)
-        .environmentObject(AppState())
+struct FeedAccessView: View {
+    var hasPremium: Bool
+
+    var body: some View {
+        if hasPremium {
+            FeedView()
+        } else {
+            Text("You need premium access to view the feed.")
+                .foregroundColor(.gray)
+                .font(.headline)
+                .padding()
+        }
+    }
 }
+
 

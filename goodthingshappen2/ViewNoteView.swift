@@ -10,7 +10,7 @@ import FirebaseAuth
 
 
 struct ViewNoteView: View {
-    @Binding var note: Note4
+    @Binding var note: Note6
     var body: some View {
         ZStack {
             Color(.champagnePink).ignoresSafeArea()
@@ -36,11 +36,11 @@ struct ViewNoteView: View {
 
 #Preview {
     // Create an example note
-    let example = Note4(postTitle: "Hello", postBody: "Example details go here and this is a body so we can see what a bunch of text looks like in the body of a text editor or text field that has a vertical axis that is expandable.", ownerId: UUID())
+    let example = Note6(postTitle: "Hello", postBody: "Example details go here and this is a body so we can see what a bunch of text looks like in the body of a text editor or text field that has a vertical axis that is expandable.", ownerId: UUID().uuidString)
     
     // Configure the model container
     EditNoteView(note: example)
-        .modelContainer(for: [Note4.self], inMemory: true)
+        .modelContainer(for: [Note6.self], inMemory: true)
 }
 
 

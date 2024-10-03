@@ -1,32 +1,34 @@
 //
-//  Note4.swift
+//  Note6.swift
 //  goodthingshappen2
 //
-//  Created by Anthony Gibson on 9/29/24.
+//  Created by Anthony Gibson on 10/2/24.
 //
 import Foundation
 import SwiftData
 
 @Model
-class Note4 {
+class Note6 {
     var id: UUID
     var postTitle: String
     var postBody: String
-    var imageURL: String
+    
+    @Attribute(.externalStorage)
+    var imageURL: Data?
+    
     var publicPost: Bool
-    var ownerId: UUID
+    var ownerId: String
     var DBID: UUID?
     var likes: Data // Changed to Data
     var collection: Data // Changed to Data
     var createdAt: Date
     var updatedAt: Date
 
-    init(id: UUID = UUID(), postTitle: String, postBody: String, imageURL: String = "", publicPost: Bool = false, ownerId: UUID, DBID: UUID? = nil, likes: [likeType] = [], collection: [collectionType] = [], createdAt: Date = Date(), updatedAt: Date = Date()) {
+    init(id: UUID = UUID(), postTitle: String, postBody: String, publicPost: Bool = false, ownerId: String, DBID: UUID? = nil, likes: [likeType] = [], collection: [collectionType] = [], createdAt: Date = Date(), updatedAt: Date = Date()) {
         self.id = id
         self.DBID = DBID
         self.postTitle = postTitle
         self.postBody = postBody
-        self.imageURL = imageURL
         self.publicPost = publicPost
         self.ownerId = ownerId
         self.likes = try! JSONEncoder().encode(likes) // Encode array to Data

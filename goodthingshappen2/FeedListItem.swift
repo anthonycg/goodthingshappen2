@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct FeedListItem: View {
-    var note: Note4
+    var note: Note6
     @State var isViewingNote: Bool = false
     @State var userHasLikedPost: Bool = false
     @State var likes: [String] = []  
@@ -21,9 +21,15 @@ struct FeedListItem: View {
             isViewingNote = true
         }) {
             ZStack {
+                if let imageData = note.imageURL,
+                      let uiImage = UIImage(data: imageData) {
+                       Image(uiImage: uiImage)
+                           .resizable()
+                           .ignoresSafeArea()
+                   }
                 RoundedRectangle(cornerRadius: 30)
                     .foregroundStyle(
-                        LinearGradient(colors: [.lightTeaGreen, .teaGreen], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        LinearGradient(colors: [.lightTeaGreen.opacity(0.5), .teaGreen.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
                     .frame(maxWidth: .infinity, minHeight: 255, maxHeight: 255)
                     .padding()
@@ -87,5 +93,5 @@ struct FeedListItem: View {
 }
 
 #Preview {
-    FeedListItem(note: Note4(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf", ownerId: UUID()))
+    FeedListItem(note: Note6(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf", ownerId: UUID().uuidString))
 }

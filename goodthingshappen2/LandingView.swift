@@ -49,6 +49,7 @@ struct LandingView: View {
                             switch result {
                             case .success(let authorization):
                                 handleAuthorization(authorization)
+                                createUser()
                             case .failure(let error):
                                 print("Sign in with Apple failed: \(error.localizedDescription)")
                             }
@@ -118,7 +119,7 @@ struct LandingView: View {
                     return
                 }
                 
-                let user = User3(id: UUID(uuidString: userId)!, name: displayName, email: email)
+                let user = User3(id: UUID(uuidString: userId) ?? UUID(), name: displayName, email: email)
                 
                 // Insert the user into the model context
                 modelContext.insert(user)
@@ -130,6 +131,46 @@ struct LandingView: View {
                 appState.isLoggedIn = true
             }
         }
+    }
+    func createUser() {
+        guard let url = URL(string: "http://157.245.141.30:3000/goodThingsHappen/server/api/user/create") else {
+            print("Invalid URL")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        let user = [
+            "id": Auth.auth().currentUser?.uid,
+            "name": Auth.auth().currentUser?.displayName,
+            "email": Auth.auth().currentUser?.email
+        ]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: user, options: [])
+        } catch {
+            print("Error serializing JSON:", error)
+            return
+        }
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error making request:", error)
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Unexpected response:", response ?? "No response")
+                return
+            }
+
+            print("User created successfully")
+        }
+
+        task.resume()
     }
 }
 
