@@ -1,6 +1,6 @@
 // notesRoutes.js
 const express = require("express");
-const notesController = require("../controllers/notesController");
+const notesController = require("../controller/note.controller");
 const router = express.Router();
 
 // Route for creating a new note

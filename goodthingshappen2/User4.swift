@@ -1,15 +1,15 @@
 //
-//  User3.swift
+//  User4.swift
 //  goodthingshappen2
 //
-//  Created by Anthony Gibson on 9/29/24.
+//  Created by Anthony Gibson on 10/5/24.
 //
 
 import Foundation
 import SwiftData
 
 @Model
-class User3 {
+class User4 {
     var id: UUID
     var firebaseId: String
     var name: String

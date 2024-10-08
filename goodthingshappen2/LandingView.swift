@@ -13,9 +13,10 @@ import FirebaseAuth
 
 struct LandingView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var userManager: UserManager
     @State private var currentNonce: String?
     @Environment(\.modelContext) var modelContext
-    @Query var users: [User3]
+    @Query var users: [User4]
     
     var body: some View {
         ZStack {
@@ -27,6 +28,7 @@ struct LandingView: View {
                 Circle().offset(x: -150, y: -350).fill(LinearGradient(gradient: Gradient(colors: [.pinkLace, .white]), startPoint: .bottomLeading, endPoint: .topTrailing))
                 
                 Circle().offset(x: 150, y: 350).fill(LinearGradient(gradient: Gradient(colors: [.teaGreen, .white]), startPoint: .topTrailing, endPoint: .bottomLeading))
+                
                 VStack {
                     Spacer()
                     
@@ -49,7 +51,6 @@ struct LandingView: View {
                             switch result {
                             case .success(let authorization):
                                 handleAuthorization(authorization)
-                                createUser()
                             case .failure(let error):
                                 print("Sign in with Apple failed: \(error.localizedDescription)")
                             }
@@ -81,11 +82,7 @@ struct LandingView: View {
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
-        let hashString = hashedData.compactMap {
-            String(format: "%02x", $0)
-        }.joined()
-        
-        return hashString
+        return hashedData.map { String(format: "%02x", $0) }.joined()
     }
     
     private func handleAuthorization(_ authorization: ASAuthorization) {
@@ -111,19 +108,29 @@ struct LandingView: View {
                     print("Firebase sign in with Apple failed: \(error.localizedDescription)")
                     return
                 }
-                let displayName = Auth.auth().currentUser?.displayName ?? "Guest"
-                let email = Auth.auth().currentUser?.email ?? ""
                 
-                guard let userId = Auth.auth().currentUser?.uid else {
+                guard let user = Auth.auth().currentUser else {
                     print("Error: User not authenticated")
                     return
                 }
                 
-                let user = User3(id: UUID(uuidString: userId) ?? UUID(), name: displayName, email: email)
+                let displayName = user.displayName ?? "Guest"
+                let email = user.email ?? ""
+                let userId = UUID()
+                let firebaseId = user.uid
+                
+                // Call createUser here
+                createUser(userId: userId.uuidString, firebaseUid: firebaseId, displayName: displayName, email: email)
+
+                // Create User4 object
+                let newUser = User4(id:userId, firebaseId: firebaseId, name: displayName, email: email)
                 
                 // Insert the user into the model context
-                modelContext.insert(user)
+                modelContext.insert(newUser)
                 try? modelContext.save()
+                
+                let userState = UserState(id: userId.uuidString, name: displayName, email: email, profileImg: "")
+                userManager.setUser(user: userState)
                 
                 print("User signed in with Apple: \(authResult?.user.uid ?? "")")
                 
@@ -132,20 +139,25 @@ struct LandingView: View {
             }
         }
     }
-    func createUser() {
-        guard let url = URL(string: "http://157.245.141.30:3000/goodThingsHappen/server/api/user/create") else {
+
+    private func createUser(userId: String, firebaseUid: String, displayName: String, email: String) {
+        guard let url = URL(string: "https://sonant.net/api/user/create") else {
             print("Invalid URL")
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
+        print("User ID: \(userId)")
+        print("Display Name: \(displayName)")
+        print("Email: \(email)")
+
         let user = [
-            "id": Auth.auth().currentUser?.uid,
-            "name": Auth.auth().currentUser?.displayName,
-            "email": Auth.auth().currentUser?.email
-        ]
+            "id": userId,
+            "firebaseId": firebaseUid,
+            "name": displayName,
+            "email": email
+        ] as [String : Any]
         
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: user, options: [])
@@ -166,10 +178,13 @@ struct LandingView: View {
                 print("Unexpected response:", response ?? "No response")
                 return
             }
+            
+            if let data = data, let responseBody = String(data: data, encoding: .utf8) {
+                print("Response body: \(responseBody)")
+            }
 
             print("User created successfully")
         }
-
         task.resume()
     }
 }

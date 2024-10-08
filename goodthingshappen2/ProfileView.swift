@@ -13,7 +13,9 @@ struct ProfileView: View {
     @State var isEditProfileShowing: Bool = false
     @Environment(\.modelContext) var modelContext
     @Query var notes: [Note6]
+    @Query var user: [User4]
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var userManager: UserManager
     
     var body: some View {
         ZStack {
@@ -32,7 +34,7 @@ struct ProfileView: View {
                     .font(.title3)
                     .padding(.top, 8)
                 
-                Text("You")
+                Text("\(user.first?.name ?? "You")")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                 
@@ -96,6 +98,7 @@ struct ProfileView: View {
         do {
             try firebaseAuth.signOut()
             appState.isLoggedIn = false
+            userManager.logout()
         } catch let signOutError as NSError {
             print("Error signing out: %@", signOutError)
         }

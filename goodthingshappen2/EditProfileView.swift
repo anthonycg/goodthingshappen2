@@ -11,8 +11,9 @@ import SwiftData
 struct EditProfileView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var userManager: UserManager
     @State private var NotificationsOn: Bool = false
-    @Query var users: [User3]
+    @Query var users: [User4]
     @State private var name: String = ""
     @State private var email: String = ""
     @State private var phone: String = ""
@@ -48,6 +49,7 @@ struct EditProfileView: View {
                             .onAppear {
                                 email = firstUser?.email ?? ""
                             }
+                            .disabled(true)
                         Divider()
                             .background(Color.black)
 
@@ -78,18 +80,25 @@ struct EditProfileView: View {
             .padding()
         }
     }
-
-    func updateUser(_ user: User3) {
+    
+    func updateUser(_ user: User4) {
         user.name = name
         user.email = email
 
         do {
+            // Swift Data
             try modelContext.save()
+            // User State
+            let userState = UserState(id: user.id.uuidString, name: name, email: email, profileImg: "")
+            userManager.setUser(user: userState)
+            // DB
+            
         } catch {
             print("Error saving updated user: \(error)")
         }
         dismiss()
     }
+    
 }
 
 #Preview {

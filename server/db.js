@@ -2,11 +2,11 @@ const { Pool } = require("pg");
 
 // Create a new connection pool
 const pool = new Pool({
-    user: "me",
-    host: "157.245.141.30",
-    database: "goodThingsHappenDB",
-    password: "Agagag24!",
-    port: 5432, // Postgres default port
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT, // Postgres default port
 });
 
 // Export the pool for use in your controllers

@@ -11,9 +11,13 @@ import RevenueCat
 import RevenueCatUI
 
 struct MyNotesView: View {
+    @Environment(\.modelContext) var modelContext
     @Query var notes: [Note6]
+    @Query var user: [User4]
     @State var isAddingNewNote: Bool = false
     @State var isShowingPaywall: Bool = false
+    
+    @EnvironmentObject var userManager: UserManager
     
     var body: some View {
         ZStack {
@@ -23,7 +27,7 @@ struct MyNotesView: View {
                 VStack {
                     HStack {
                         Image(systemName: "figure.wave.circle.fill")
-                        Text("Hello there")
+                        Text("Hello, \(user.first?.name ?? "Hello there")")
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                     .padding()
@@ -36,7 +40,7 @@ struct MyNotesView: View {
                     
                     // Use a VStack instead of List
                     VStack {
-                        ForEach(notes) { note in
+                        ForEach(notes.reversed()) { note in
                             NoteListItem(note: note)
                         }
                     }
@@ -80,7 +84,7 @@ struct MyNotesView: View {
                             .font(.system(size: 24))
                             .foregroundColor(.white)
                             .padding()
-                            .background(Color.accentColor)
+                            .background(Color.teaGreen)
                             .clipShape(Circle())
                             .shadow(radius: 10)
                     }

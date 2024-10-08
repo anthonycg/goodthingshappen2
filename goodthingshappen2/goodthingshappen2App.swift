@@ -28,13 +28,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct goodthingshappen2App: App {
     
     @StateObject var appState = AppState()
+    @StateObject var userManager = UserManager()
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Note6.self,
-            User3.self
+            User4.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema)
         do {
@@ -50,6 +51,10 @@ struct goodthingshappen2App: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
+                .environmentObject(userManager)
+                .onAppear {
+                    userManager.initializeUser()
+                }
         }
         .modelContainer(sharedModelContainer)
     }
