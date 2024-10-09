@@ -17,14 +17,15 @@ struct FeedView: View {
     var body: some View {
         ZStack {
             Color.champagnePink.ignoresSafeArea()
-            LazyVStack {
-                ForEach (notes) {
-                    note in
-                    FeedListItem(note: note, isViewingNote: false)
+            ScrollView {
+                LazyVStack {
+                    ForEach (notes) {
+                        note in
+                        FeedListItem(note: note, isViewingNote: false)
+                    }
                 }
             }
         }
-        
     }
 }
 

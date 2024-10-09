@@ -24,15 +24,19 @@ struct FeedListItem: View {
                 if let imageData = note.imageURL,
                       let uiImage = UIImage(data: imageData) {
                        Image(uiImage: uiImage)
-                           .resizable()
-                           .ignoresSafeArea()
+                        .resizable()
+                        .scaledToFill()  // Use scaledToFill to cover the area
+                        .frame(maxWidth: .infinity, minHeight: 225, maxHeight: 225) // Match the rectangle size
+                        .clipped()
+                        .cornerRadius(30)
+                        .padding(.bottom)
                    }
                 RoundedRectangle(cornerRadius: 30)
                     .foregroundStyle(
                         LinearGradient(colors: [.lightTeaGreen.opacity(0.5), .teaGreen.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
                     .frame(maxWidth: .infinity, minHeight: 255, maxHeight: 255)
-                    .padding()
+                    .padding(.bottom)
                 
                 VStack(alignment: .leading) {
                     Text(note.postTitle.isEmpty ? "Untitled" : note.postTitle)
@@ -62,9 +66,6 @@ struct FeedListItem: View {
                             .foregroundStyle(.black)
                     }
                     .padding()
-                    .background(Color.black.opacity(0.05))
-                    .cornerRadius(20)
-                    .padding(.bottom)
                 }
             }
         }

@@ -30,15 +30,15 @@ struct ContentView: View {
                         Label("Notes", systemImage: "note.text")
                     }
                 
-                FeedAccessView(hasPremium: hasPremium)
+                FeedView()
                     .tabItem {
                         Label("Feed", systemImage: "newspaper")
                     }
-                    .onAppear {
-                        Task {
-                            await checkPremiumStatus()
-                        }
-                    }
+//                    .onAppear {
+//                        Task {
+//                            await checkPremiumStatus()
+//                        }
+//                    }
                 
                 ProfileView()
                     .tabItem {
@@ -84,19 +84,19 @@ struct ContentView: View {
     }
 }
 
-struct FeedAccessView: View {
-    var hasPremium: Bool
-
-    var body: some View {
-        if hasPremium {
-            FeedView()
-        } else {
-            Text("You need premium access to view the feed.")
-                .foregroundColor(.gray)
-                .font(.headline)
-                .padding()
-        }
-    }
-}
+//struct FeedAccessView: View {
+//    var hasPremium: Bool
+//
+//    var body: some View {
+//        if hasPremium {
+//            FeedView()
+//        } else {
+//            Text("You need premium access to view the feed.")
+//                .foregroundColor(.gray)
+//                .font(.headline)
+//                .padding()
+//        }
+//    }
+//}
 
 
