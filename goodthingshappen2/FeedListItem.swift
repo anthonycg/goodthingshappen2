@@ -12,7 +12,8 @@ struct FeedListItem: View {
     var note: Note6
     @State var isViewingNote: Bool = false
     @State var userHasLikedPost: Bool = false
-    @State var likes: [String] = []  
+    @State var likes: [String] = []
+    
     
     var body: some View {
         let currentUserId = Auth.auth().currentUser?.uid ?? ""
@@ -26,8 +27,7 @@ struct FeedListItem: View {
                        Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFill()  // Use scaledToFill to cover the area
-                        .frame(maxWidth: .infinity, minHeight: 225, maxHeight: 225) // Match the rectangle size
-                        .clipped()
+                        .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245) // Match the rectangle size
                         .cornerRadius(30)
                         .padding(.bottom)
                    }
@@ -35,7 +35,7 @@ struct FeedListItem: View {
                     .foregroundStyle(
                         LinearGradient(colors: [.lightTeaGreen.opacity(0.5), .teaGreen.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
-                    .frame(maxWidth: .infinity, minHeight: 255, maxHeight: 255)
+                    .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245)
                     .padding(.bottom)
                 
                 VStack(alignment: .leading) {
@@ -64,13 +64,14 @@ struct FeedListItem: View {
                         // Display the number of likes
                         Text("\(likes.count)")
                             .foregroundStyle(.black)
+                    
                     }
-                    .padding()
                 }
             }
         }
+        .padding()
         .sheet(isPresented: $isViewingNote) {
-            EditNoteView(note: note)
+            FeedNoteView(note: note)
         }
         .onAppear {
             // Check if the current user has already liked the post

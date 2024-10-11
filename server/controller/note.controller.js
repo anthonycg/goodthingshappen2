@@ -3,10 +3,10 @@ const pool = require("../db"); // Assumes you're using a PostgreSQL pool connect
 
 // Create a new note
 const createNote = async (req, res) => {
-    const { title, content } = req.body;
+    const { postTitle, postBody, imageUrl, publicPost, likes } = req.body;
     try {
         const newNote = await pool.query(
-            "INSERT INTO notes (title, content) VALUES ($1, $2) RETURNING *",
+            "INSERT INTO notes (postTitle, postBody, imageUrl, publicPost, likes) VALUES ($1, $2, $3, $4, $5) RETURNING *",
             [title, content]
         );
         res.json(newNote.rows[0]);
