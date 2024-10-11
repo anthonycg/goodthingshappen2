@@ -4,12 +4,20 @@ const db = require("../db"); // Import the db module
 
 // Create a new user
 const createUser = async (req, res) => {
-    const { id, name, email, gender, profileImg, createdAt, updatedAt } =
-        req.body;
+    const {
+        id,
+        firebaseId,
+        name,
+        email,
+        gender,
+        profileImg,
+        createdAt,
+        updatedAt,
+    } = req.body;
 
     const queryText = `
-        INSERT INTO users (id, name, email, gender, profileImg, createdAt, updatedAt)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO users (id, firebseId, name, email, gender, profileImg, createdAt, updatedAt)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *;`;
 
     try {

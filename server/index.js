@@ -1,6 +1,6 @@
 // index.js
 const express = require("express");
-const notesRoutes = require("./routes/notesRoutes");
+const notesRoutes = require("./routes/note.routes");
 const userRoutes = require("./routes/user.routes");
 const app = express();
 const port = 3000; // Change the port if necessary
@@ -8,6 +8,16 @@ const port = 3000; // Change the port if necessary
 // Define a simple route
 app.get("/", (req, res) => {
     res.send("Hello World!");
+});
+
+// Define a test route
+app.get("/api/test/hello", (req, res) => {
+    res.send("Hello Test!");
+});
+
+// Define a test route
+app.get("/hello", (req, res) => {
+    res.send("Slash!");
 });
 
 // Middleware to parse JSON

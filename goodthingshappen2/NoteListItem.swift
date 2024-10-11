@@ -73,18 +73,23 @@ struct NoteListItem: View {
             print("Invalid URL")
             return
         }
+        
+        var imageBase64String: String? = nil
+        if let imageData = note.imageURL {
+            imageBase64String = imageData.base64EncodedString() // Convert image data to base64
+        }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         print("Note ID: \(note.id)")
         print("Post Title: \(note.postTitle)")
-        print("ImageURL: \(uiImage)")
+        print("ImageURL: \(String(describing: uiImage))")
 
         let note = [
-            "id": note.id,
+            "id": note.id.uuidString,
             "postTitle": note.postTitle,
             "postBody": note.postBody,
-            "imageUrl": uiImage ?? "",
+            "imageUrl": imageBase64String ?? "",
             "likes": [],
             "publicPost": true
         ] as [String : Any]
