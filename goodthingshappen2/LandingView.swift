@@ -114,7 +114,7 @@ struct LandingView: View {
                     return
                 }
                 
-                let displayName = user.displayName ?? "Guest"
+                let displayName = "\(appleIDCredential.fullName?.givenName ?? "Guest") \(appleIDCredential.fullName?.familyName ?? "Guest")"
                 let email = user.email ?? ""
                 let userId = UUID()
                 let firebaseId = user.uid
