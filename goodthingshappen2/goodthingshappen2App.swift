@@ -35,7 +35,7 @@ struct goodthingshappen2App: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Note6.self,
-            User4.self
+            User5.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema)
         do {

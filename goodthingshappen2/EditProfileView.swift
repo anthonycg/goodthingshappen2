@@ -13,7 +13,7 @@ struct EditProfileView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var userManager: UserManager
     @State private var NotificationsOn: Bool = false
-    @Query var users: [User4]
+    @Query var users: [User5]
     @State private var name: String = ""
     @State private var email: String = ""
     @State private var phone: String = ""
@@ -81,7 +81,7 @@ struct EditProfileView: View {
         }
     }
     
-    func updateUser(_ user: User4) {
+    func updateUser(_ user: User5) {
         user.name = name
         user.email = email
 
@@ -89,7 +89,7 @@ struct EditProfileView: View {
             // Swift Data
             try modelContext.save()
             // User State
-            let userState = UserState(id: user.id.uuidString, name: name, email: email, profileImg: "")
+            let userState = UserState(id: user.id, name: name, email: email, profileImg: "")
             userManager.setUser(user: userState)
             // DB
             

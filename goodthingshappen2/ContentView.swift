@@ -15,7 +15,7 @@ struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.modelContext) private var modelContext
     @Query private var notes: [Note6]
-    @Query private var user: [User4]
+    @Query private var user: [User5]
     
     @State private var showPaywall = false
     @State private var hasPremium: Bool = false

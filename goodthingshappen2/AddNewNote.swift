@@ -152,5 +152,5 @@ struct AddNewNote: View {
 
 #Preview {
     AddNewNote(postTitle: "", postBody: "")
-        .modelContainer(for: [Note6.self, User4.self])
+        .modelContainer(for: [Note6.self, User5.self])
 }

@@ -16,7 +16,7 @@ struct LandingView: View {
     @EnvironmentObject var userManager: UserManager
     @State private var currentNonce: String?
     @Environment(\.modelContext) var modelContext
-    @Query var users: [User4]
+    @Query var users: [User5]
     
     var body: some View {
         ZStack {
@@ -116,20 +116,19 @@ struct LandingView: View {
                 
                 let displayName = "\(appleIDCredential.fullName?.givenName ?? "Guest") \(appleIDCredential.fullName?.familyName ?? "Guest")"
                 let email = user.email ?? ""
-                let userId = UUID()
-                let firebaseId = user.uid
+                let userId = user.uid
                 
                 // Call createUser here
-                createUser(userId: userId.uuidString, firebaseUid: firebaseId, displayName: displayName, email: email)
+                createUser(userId: userId, displayName: displayName, email: email)
 
-                // Create User4 object
-                let newUser = User4(id:userId, firebaseId: firebaseId, name: displayName, email: email)
+                // Create User5 object
+                let newUser = User5(id: userId, name: displayName, email: email)
                 
                 // Insert the user into the model context
                 modelContext.insert(newUser)
                 try? modelContext.save()
                 
-                let userState = UserState(id: userId.uuidString, name: displayName, email: email, profileImg: "")
+                let userState = UserState(id: userId, name: displayName, email: email, profileImg: "")
                 userManager.setUser(user: userState)
                 
                 print("User signed in with Apple: \(authResult?.user.uid ?? "")")
@@ -140,7 +139,7 @@ struct LandingView: View {
         }
     }
 
-    private func createUser(userId: String, firebaseUid: String, displayName: String, email: String) {
+    private func createUser(userId: String, displayName: String, email: String) {
         guard let url = URL(string: "https://sonant.net/api/user/create") else {
             print("Invalid URL")
             return
@@ -154,9 +153,8 @@ struct LandingView: View {
 
         let user = [
             "id": userId,
-            "firebaseId": firebaseUid,
             "name": displayName,
-            "email": email
+            "email": email,
         ] as [String : Any]
         
         do {

@@ -13,7 +13,7 @@ import RevenueCatUI
 struct MyNotesView: View {
     @Environment(\.modelContext) var modelContext
     @Query var notes: [Note6]
-    @Query var user: [User4]
+    @Query var user: [User5]
     @State var isAddingNewNote: Bool = false
     @State var isShowingPaywall: Bool = false
     

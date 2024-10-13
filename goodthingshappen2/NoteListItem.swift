@@ -74,6 +74,11 @@ struct NoteListItem: View {
             return
         }
         
+        guard let user = Auth.auth().currentUser else {
+            print("Error: User not authenticated")
+            return
+        }
+        
         var imageBase64String: String? = nil
         if let imageData = note.imageURL {
             imageBase64String = imageData.base64EncodedString() // Convert image data to base64
@@ -91,6 +96,7 @@ struct NoteListItem: View {
             "postBody": note.postBody,
             "imageUrl": imageBase64String ?? "",
             "likes": [],
+            "ownerId": user.uid,
             "publicPost": true
         ] as [String : Any]
         
@@ -118,7 +124,7 @@ struct NoteListItem: View {
                 print("Response body: \(responseBody)")
             }
 
-            print("User created successfully")
+            print("Note created successfully")
         }
         task.resume()
     }

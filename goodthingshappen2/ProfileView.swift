@@ -13,7 +13,7 @@ struct ProfileView: View {
     @State var isEditProfileShowing: Bool = false
     @Environment(\.modelContext) var modelContext
     @Query var notes: [Note6]
-    @Query var user: [User4]
+    @Query var user: [User5]
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var userManager: UserManager
     
