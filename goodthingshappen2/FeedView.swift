@@ -6,25 +6,31 @@
 //
 
 import SwiftUI
-import RevenueCat
-import RevenueCatUI
-import SwiftData
+import Combine
 
 struct FeedView: View {
-    @Environment(\.modelContext) var modelContext
-    @Query var notes: [Note6]
+    @StateObject private var viewModel = FeedViewModel()
+    @State private var page = 1
+    @State private var isLoading = false
+    private let postsPerPage = 10
     
     var body: some View {
         ZStack {
             Color.champagnePink.ignoresSafeArea()
             ScrollView {
                 LazyVStack {
-                    ForEach (notes) {
-                        note in
+                    ForEach(viewModel.notes) { note in
                         FeedListItem(note: note, isViewingNote: false)
+                    }
+                    
+                    if isLoading {
+                        ProgressView()
                     }
                 }
             }
+        }
+        .onAppear {
+            viewModel.fetchNotes()
         }
     }
 }
@@ -32,3 +38,4 @@ struct FeedView: View {
 #Preview {
     FeedView()
 }
+

@@ -19,7 +19,9 @@ const createNote = async (req, res) => {
 // Get all notes
 const getNotes = async (req, res) => {
     try {
-        const notes = await pool.query("SELECT * FROM notes");
+        const notes = await pool.query(
+            "SELECT notes.*, users.name AS userName FROM notes JOIN users ON notes.ownerId = users.id"
+        );
         res.json(notes.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });

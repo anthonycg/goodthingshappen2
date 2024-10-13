@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 
 struct FeedListItem: View {
-    var note: Note6
+    var note: NoteRetrieved
     @State var isViewingNote: Bool = false
     @State var userHasLikedPost: Bool = false
     @State var likes: [String] = []
@@ -22,15 +22,15 @@ struct FeedListItem: View {
             isViewingNote = true
         }) {
             ZStack {
-                if let imageData = note.imageURL,
-                      let uiImage = UIImage(data: imageData) {
-                       Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFill()  // Use scaledToFill to cover the area
-                        .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245) // Match the rectangle size
-                        .cornerRadius(30)
-                        .padding(.bottom)
-                   }
+//                if let imageData = note.imageUrl,
+//                      let uiImage = UIImage(data: imageData) {
+//                       Image(uiImage: uiImage)
+//                        .resizable()
+//                        .scaledToFill()  // Use scaledToFill to cover the area
+//                        .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245) // Match the rectangle size
+//                        .cornerRadius(30)
+//                        .padding(.bottom)
+//                   }
                 RoundedRectangle(cornerRadius: 30)
                     .foregroundStyle(
                         LinearGradient(colors: [.lightTeaGreen.opacity(0.5), .teaGreen.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
@@ -39,13 +39,13 @@ struct FeedListItem: View {
                     .padding(.bottom)
                 
                 VStack(alignment: .leading) {
-                    Text(note.postTitle.isEmpty ? "Untitled" : note.postTitle)
+                    Text(note.posttitle.isEmpty ? "Untitled" : note.posttitle)
                         .frame(width: 330, height: 150, alignment: .bottomLeading)
                         .foregroundStyle(Color.black)
                         .font(.largeTitle)
                         .lineLimit(1)
                     
-                    Text(note.postBody.isEmpty ? "No details yet." : note.postBody)
+                    Text(note.postbody.isEmpty ? "No details yet." : note.postbody)
                         .frame(width: 330, height: 30, alignment: .bottomLeading)
                         .foregroundStyle(Color.black)
                         .font(.title3)
@@ -65,6 +65,8 @@ struct FeedListItem: View {
                         Text("\(likes.count)")
                             .foregroundStyle(.black)
                     
+                        Text("\(note.username)")
+                            .foregroundStyle(.black)
                     }
                 }
             }
@@ -95,5 +97,5 @@ struct FeedListItem: View {
 }
 
 #Preview {
-    FeedListItem(note: Note6(postTitle: "Sample Title that has a bunch of text and this is eve", postBody: "Sample Body witha a bit more text faadsfadsf", ownerId: UUID().uuidString))
+    FeedListItem(note: NoteRetrieved(id: "4242", posttitle: "Sample Title that has a bunch of text and this is eve", postbody: "Sample Body witha a bit more text faadsfadsf", imageurl: "", publicpost: false, ownerid: UUID().uuidString, likes: Likes(data: [123, 125]), createdat: "100", updatedat: "20", username: "Hello"))
 }

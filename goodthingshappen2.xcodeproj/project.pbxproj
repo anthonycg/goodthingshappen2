@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		15B6C97B2CAA2BEF00CDC817 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = 15B6C97A2CAA2BEF00CDC817 /* RevenueCat */; };
 		15B6C97D2CAA2BEF00CDC817 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 15B6C97C2CAA2BEF00CDC817 /* RevenueCatUI */; };
+		15BA9AAC2CBBB2500084A9C7 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15BA9AAB2CBBB2500084A9C7 /* FeedViewModel.swift */; };
 		15BFBB962CA64CEA008061DF /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 15BFBB952CA64CEA008061DF /* FirebaseAnalytics */; };
 		15BFBB982CA64CEA008061DF /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 15BFBB972CA64CEA008061DF /* FirebaseAuth */; };
 /* End PBXBuildFile section */
@@ -34,6 +35,7 @@
 		152CE5FF2C9F52CD00DCB5F7 /* goodthingshappen2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = goodthingshappen2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		152CE6112C9F52D000DCB5F7 /* goodthingshappen2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = goodthingshappen2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		152CE61B2C9F52D000DCB5F7 /* goodthingshappen2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = goodthingshappen2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		15BA9AAB2CBBB2500084A9C7 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -86,6 +88,7 @@
 		152CE5F62C9F52CD00DCB5F7 = {
 			isa = PBXGroup;
 			children = (
+				15BA9AAB2CBBB2500084A9C7 /* FeedViewModel.swift */,
 				152CE6012C9F52CD00DCB5F7 /* goodthingshappen2 */,
 				152CE6142C9F52D000DCB5F7 /* goodthingshappen2Tests */,
 				152CE61E2C9F52D000DCB5F7 /* goodthingshappen2UITests */,
@@ -255,6 +258,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				15BA9AAC2CBBB2500084A9C7 /* FeedViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
