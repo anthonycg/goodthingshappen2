@@ -7,7 +7,7 @@ const createNote = async (req, res) => {
     try {
         const newNote = await pool.query(
             "INSERT INTO notes (postTitle, postBody, imageUrl, publicPost, likes) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-            [title, content]
+            [postTitle, postBody, imageUrl, publicPost, likes]
         );
         res.json(newNote.rows[0]);
     } catch (err) {

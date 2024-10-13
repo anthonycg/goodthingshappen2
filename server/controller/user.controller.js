@@ -23,6 +23,7 @@ const createUser = async (req, res) => {
     try {
         const result = await db.query(queryText, [
             id,
+            firebaseId,
             name,
             email,
             gender,
