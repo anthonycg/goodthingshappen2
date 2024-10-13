@@ -27,16 +27,14 @@ struct FeedListItem: View {
 //                       Image(uiImage: uiImage)
 //                        .resizable()
 //                        .scaledToFill()  // Use scaledToFill to cover the area
-//                        .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245) // Match the rectangle size
+//                        .frame(maxWidth: .infinity, minHeight: 265, maxHeight: 265) // Match the rectangle size
 //                        .cornerRadius(30)
-//                        .padding(.bottom)
 //                   }
                 RoundedRectangle(cornerRadius: 30)
                     .foregroundStyle(
                         LinearGradient(colors: [.lightTeaGreen.opacity(0.8), .teaGreen.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
-                    .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245)
-                    .padding(.bottom)
+                    .frame(maxWidth: .infinity, minHeight: 265, maxHeight: 265)
                 
                 VStack(alignment: .leading) {
                     Text(note.posttitle.isEmpty ? "Untitled" : note.posttitle)
@@ -51,7 +49,7 @@ struct FeedListItem: View {
                         .font(.title3)
                         .lineLimit(1)
                     
-                    HStack(spacing: 10) {
+                    HStack(spacing: 3) {
                         // Like/Unlike Button
                         Button(action: {
                             toggleLike(for: currentUserId)
@@ -64,14 +62,18 @@ struct FeedListItem: View {
                         // Display the number of likes
                         Text("\(likes.count)")
                             .foregroundStyle(.black)
+                            .padding([.trailing], 15)
                     
                         Text("\(note.username)")
                             .foregroundStyle(.black)
                     }
+                    .padding(9)
+                    .background(Color.black.opacity(0.1))
+                    .cornerRadius(10)
                 }
             }
         }
-        .padding()
+        .padding([.leading, .trailing])
         .sheet(isPresented: $isViewingNote) {
             FeedNoteView(note: note)
         }

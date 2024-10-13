@@ -15,9 +15,6 @@ struct NoteListItem: View {
     @State var isPublic: Bool = false
 
     var body: some View {
-        Button(action: {
-            isEditingNote = true
-        }) {
             ZStack {
                 // Check if imageData exists and is valid, then display the image
                 if let imageData = note.imageURL,
@@ -25,28 +22,26 @@ struct NoteListItem: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFill()  // Use scaledToFill to cover the area
-                        .frame(maxWidth: .infinity, minHeight: 225, maxHeight: 225) // Match the rectangle size
+                        .frame(maxWidth: .infinity, minHeight: 265, maxHeight: 265) // Match the rectangle size
                         .clipped()
                         .cornerRadius(30)
-                        .padding(.bottom)
                 }
 
                 RoundedRectangle(cornerRadius: 30)
                     .foregroundStyle(
                         LinearGradient(colors: [.lightTeaGreen.opacity((uiImage != nil) ? 0.0 : 0.8), .teaGreen.opacity((uiImage != nil) ? 0.0 : 0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
-                    .frame(maxWidth: .infinity, minHeight: 225, maxHeight: 225) // Maintain the frame
-                    .padding(.bottom)
+                    .frame(maxWidth: .infinity, minHeight: 265, maxHeight: 265) // Maintain the frame
                 
                 HStack {
-                    Button("Public") {
-                        isPublic = true
-                        makePostPublic()
-                    }
-                        .frame(width: 130, alignment: .trailing)
-                        .padding([.leading], 200)
-                        .offset(x: 0, y: -70)
+                    Text(isPublic ? "Public" : "Private")
+                        .frame(width: 70)
+                        .font(.headline)
+                        .foregroundColor(isPublic ? .green : .red)
+                        .background(RoundedRectangle(cornerRadius: 5).fill(isPublic ? Color.green.opacity(0.3) : Color.red.opacity(0.3)))
+                        .offset(x: 135, y: -90)
                 }
+
                 VStack(alignment: .leading) {
                     Text(note.postTitle.isEmpty ? "Untitled" : note.postTitle)
                         .frame(width: 330, height: 150, alignment: .bottomLeading)
@@ -59,10 +54,39 @@ struct NoteListItem: View {
                         .foregroundStyle(Color.black)
                         .font(.title3)
                         .lineLimit(1)
+                    
+                    HStack(spacing: 30) {
+                        Button(action: {
+                            makePostPublic()
+                            isPublic = true
+                        }) {
+                            Image(systemName: "network")
+                                .font(.system(size: 20))
+                                .foregroundColor(.black)
+                        }
+                        
+                        Button(action: {
+                            isEditingNote = true
+                        }) {
+                            Image(systemName: "pencil")
+                                .font(.system(size: 20))
+                                .foregroundColor(.black)
+                        }
+                        
+                        Button(action: {
+                            // delete
+                        }) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 20))
+                                .foregroundColor(.black)
+                        }
+                    }
+                    .padding(9)
+                    .background(Color.black.opacity(0.1))
+                    .cornerRadius(10)
                 }
                 .padding() // Add some padding to the text for better readability
             }
-        }
         .sheet(isPresented: $isEditingNote) {
             EditNoteView(note: note)
         }
