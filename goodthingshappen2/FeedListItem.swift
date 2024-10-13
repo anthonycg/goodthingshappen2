@@ -33,7 +33,7 @@ struct FeedListItem: View {
 //                   }
                 RoundedRectangle(cornerRadius: 30)
                     .foregroundStyle(
-                        LinearGradient(colors: [.lightTeaGreen.opacity(0.5), .teaGreen.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        LinearGradient(colors: [.lightTeaGreen.opacity(0.8), .teaGreen.opacity(0.7)], startPoint: .topLeading, endPoint: .bottomTrailing)
                     )
                     .frame(maxWidth: .infinity, minHeight: 245, maxHeight: 245)
                     .padding(.bottom)

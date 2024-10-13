@@ -10,9 +10,6 @@ import Combine
 
 struct FeedView: View {
     @StateObject private var viewModel = FeedViewModel()
-    @State private var page = 1
-    @State private var isLoading = false
-    private let postsPerPage = 10
     
     var body: some View {
         ZStack {
@@ -23,19 +20,27 @@ struct FeedView: View {
                         FeedListItem(note: note, isViewingNote: false)
                     }
                     
-                    if isLoading {
+                    // Show progress indicator while loading more posts
+                    if viewModel.isLoading {
                         ProgressView()
                     }
                 }
+                .padding(.bottom)
+                .onAppear {
+                    if viewModel.notes.isEmpty {
+                        viewModel.fetchNotes() // Fetch initial posts
+                    }
+                }
+                .onAppear(perform: loadMoreNotesIfNeeded)
             }
         }
-        .onAppear {
-            viewModel.fetchNotes()
+    }
+
+    // Function to detect when to load more notes
+    private func loadMoreNotesIfNeeded() {
+        if !viewModel.isLoading {
+            viewModel.fetchNotes() // Fetch next set of posts
         }
     }
-}
-
-#Preview {
-    FeedView()
 }
 

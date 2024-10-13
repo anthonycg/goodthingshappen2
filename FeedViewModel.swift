@@ -11,40 +11,52 @@ import Combine
 
 class FeedViewModel: ObservableObject {
     @Published var notes: [NoteRetrieved] = []
-
+    @Published var isLoading = false // Track loading state
+    private var page = 1 // Start with the first page
+    private let postsPerPage = 10
+    
     func fetchNotes() {
-        guard let url = URL(string: "https://sonant.net/api/notes/") else { return }
+        guard !isLoading else { return } // Avoid multiple requests
+        isLoading = true
+        
+        guard let url = URL(string: "https://sonant.net/api/notes/?page=\(page)&limit=\(postsPerPage)") else {
+            isLoading = false
+            return
+        }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self else { return }
+            
             if let error = error {
                 print("Error fetching notes: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
                 return
             }
 
             guard let data = data else {
                 print("No data returned.")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
                 return
             }
             
-//            // Log the raw response
-//            if let jsonString = String(data: data, encoding: .utf8) {
-//                print("Raw JSON response: \(jsonString)")
-//            }
-
             do {
-                let notes = try JSONDecoder().decode([NoteRetrieved].self, from: data)
+                let newNotes = try JSONDecoder().decode([NoteRetrieved].self, from: data)
                 DispatchQueue.main.async {
-                    self.notes = notes
+                    self.notes.append(contentsOf: newNotes) // Append new notes
+                    self.page += 1 // Increment page for next fetch
+                    self.isLoading = false // Reset loading state
                 }
             } catch {
                 print("Error decoding JSON: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
             }
         }.resume()
-        print("Fetched notes: \(notes)")
-
     }
-
-
-
-    private var cancellables = Set<AnyCancellable>() 
 }
+
