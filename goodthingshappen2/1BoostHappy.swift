@@ -32,6 +32,8 @@ struct _BoostHappy: View {
                         .padding([.bottom], 90)
                     
                     HStack {
+                        Image(systemName: "circle")
+                            .font(.system(size: 10))
                         Image(systemName: "circle.fill")
                             .font(.system(size: 10))
                         Image(systemName: "circle")

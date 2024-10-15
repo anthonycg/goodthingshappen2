@@ -38,13 +38,15 @@ struct _Celebrate: View {
                             .font(.system(size: 10))
                         Image(systemName: "circle")
                             .font(.system(size: 10))
+                        Image(systemName: "circle")
+                            .font(.system(size: 10))
                         Image(systemName: "circle.fill")
                             .font(.system(size: 10))
                     }
                     .padding([.bottom], 20)
                     
                     // NavigationLink to MyNotesView
-                    NavigationLink(destination: MyNotesView()) {
+                    NavigationLink(destination: _NoAds()) {
                         ZStack {
                             RoundedRectangle(cornerRadius: 10)
                                 .frame(width: 150, height: 30)

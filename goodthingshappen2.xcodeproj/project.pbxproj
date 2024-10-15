@@ -38,9 +38,22 @@
 		15BA9AAB2CBBB2500084A9C7 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		15B5B0642CBD9AC0007BA3F7 /* Exceptions for "goodthingshappen2" folder in "goodthingshappen2" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 152CE5FE2C9F52CD00DCB5F7 /* goodthingshappen2 */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		152CE6012C9F52CD00DCB5F7 /* goodthingshappen2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				15B5B0642CBD9AC0007BA3F7 /* Exceptions for "goodthingshappen2" folder in "goodthingshappen2" target */,
+			);
 			path = goodthingshappen2;
 			sourceTree = "<group>";
 		};
@@ -423,7 +436,7 @@
 				DEVELOPMENT_TEAM = WATU5RPHYW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "";
+				INFOPLIST_FILE = goodthingshappen2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Good Things";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -457,6 +470,7 @@
 				DEVELOPMENT_TEAM = WATU5RPHYW;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = goodthingshappen2/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Good Things";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

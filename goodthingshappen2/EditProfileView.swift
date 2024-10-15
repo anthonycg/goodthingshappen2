@@ -57,11 +57,11 @@ struct EditProfileView: View {
                             updateUser(users.first!)
                         }
 
-                        HStack {
-                            Toggle("Notifications", isOn: $NotificationsOn)
-                                .frame(width: 200)
-                        }
-                        .padding()
+//                        HStack {
+//                            Toggle("Notifications", isOn: $NotificationsOn)
+//                                .frame(width: 200)
+//                        }
+//                        .padding()
 
                         Button("Contact Us") {
                             // Open the email client with pre-populated address

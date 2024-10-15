@@ -17,47 +17,53 @@ struct LandingView: View {
     @State private var currentNonce: String?
     @Environment(\.modelContext) var modelContext
     @Query var users: [User5]
+    @State private var isFirstTimeUser: Bool = false
     
     var body: some View {
-        ZStack {
-            Color.champagnePink.ignoresSafeArea()
-            
-            Circle().offset().fill(LinearGradient(gradient: Gradient(colors: [.champagnePink, .white]), startPoint: .topTrailing, endPoint: .bottomLeading))
-            
+        NavigationStack {
             ZStack {
-                Circle().offset(x: -150, y: -350).fill(LinearGradient(gradient: Gradient(colors: [.pinkLace, .white]), startPoint: .bottomLeading, endPoint: .topTrailing))
+                Color.champagnePink.ignoresSafeArea()
                 
-                Circle().offset(x: 150, y: 350).fill(LinearGradient(gradient: Gradient(colors: [.teaGreen, .white]), startPoint: .topTrailing, endPoint: .bottomLeading))
+                Circle().offset().fill(LinearGradient(gradient: Gradient(colors: [.champagnePink, .white]), startPoint: .topTrailing, endPoint: .bottomLeading))
                 
-                VStack {
-                    Spacer()
+                ZStack {
+                    Circle().offset(x: -150, y: -350).fill(LinearGradient(gradient: Gradient(colors: [.pinkLace, .white]), startPoint: .bottomLeading, endPoint: .topTrailing))
                     
-                    Text("Good Things are happening")
-                        .bold()
-                        .font(.largeTitle)
-                    Text("You should start taking note.")
-                        .font(.body)
+                    Circle().offset(x: 150, y: 350).fill(LinearGradient(gradient: Gradient(colors: [.teaGreen, .white]), startPoint: .topTrailing, endPoint: .bottomLeading))
                     
-                    Spacer()
-                    
-                    SignInWithAppleButton(
-                        onRequest: { request in
-                            let nonce = randomNonceString()
-                            currentNonce = nonce
-                            request.requestedScopes = [.fullName, .email]
-                            request.nonce = sha256(nonce)
-                        },
-                        onCompletion: { result in
-                            switch result {
-                            case .success(let authorization):
-                                handleAuthorization(authorization)
-                            case .failure(let error):
-                                print("Sign in with Apple failed: \(error.localizedDescription)")
+                    VStack {
+                        Spacer()
+                        
+                        Text("Good Things are happening")
+                            .bold()
+                            .font(.largeTitle)
+                        Text("You should start taking note.")
+                            .font(.body)
+                        
+                        Spacer()
+                        
+                        SignInWithAppleButton(
+                            onRequest: { request in
+                                let nonce = randomNonceString()
+                                currentNonce = nonce
+                                request.requestedScopes = [.fullName, .email]
+                                request.nonce = sha256(nonce)
+                            },
+                            onCompletion: { result in
+                                switch result {
+                                case .success(let authorization):
+                                    handleAuthorization(authorization)
+                                case .failure(let error):
+                                    print("Sign in with Apple failed: \(error.localizedDescription)")
+                                }
                             }
-                        }
-                    )
-                    .frame(width: 200, height: 45)
+                        )
+                        .frame(width: 200, height: 45)
+                    }
                 }
+            }
+            .navigationDestination(isPresented: $isFirstTimeUser) {
+                _BoostHappy()
             }
         }
     }
@@ -133,8 +139,12 @@ struct LandingView: View {
                 
                 print("User signed in with Apple: \(authResult?.user.uid ?? "")")
                 
-                // Update the app state
-                appState.isLoggedIn = true
+                if (authResult?.additionalUserInfo?.isNewUser == true) {
+                    isFirstTimeUser = true
+                } else {
+                    // Update the app state
+                    appState.isLoggedIn = true
+                }
             }
         }
     }
