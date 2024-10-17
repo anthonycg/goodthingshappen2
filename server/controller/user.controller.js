@@ -65,7 +65,7 @@ const getUser = async (req, res) => {
 // Update a user by ID
 const updateUser = async (req, res) => {
     const userId = req.params.id;
-    const { name, email, gender, profileImg, updatedAt } = req.body;
+    const { name, email, gender, profileImg, updatedAt, id } = req.body;
 
     const queryText = `
         UPDATE users SET name = $1, email = $2, gender = $3, profileImg = $4, updatedAt = $5
@@ -80,6 +80,7 @@ const updateUser = async (req, res) => {
             profileImg,
             updatedAt,
             userId,
+            id,
         ]);
         if (result.rows.length > 0) {
             res.json(result.rows[0]); // Return the updated user

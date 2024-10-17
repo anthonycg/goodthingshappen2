@@ -63,7 +63,7 @@ struct LandingView: View {
                 }
             }
             .navigationDestination(isPresented: $isFirstTimeUser) {
-                _BoostHappy()
+                _WhatsYourName(name: "", email: "")
             }
         }
     }
