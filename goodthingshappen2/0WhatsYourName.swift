@@ -15,6 +15,8 @@ struct _WhatsYourName: View {
     @Query var user: [User5]
     @State var name: String
     @State var email: String
+    @State var updateCompleted: Bool = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -45,28 +47,50 @@ struct _WhatsYourName: View {
                     }
                     .padding([.bottom], 20)
                     
-                    // NavigationLink to MyNotesView
-                    NavigationLink(destination: _ScheduleNotification()) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .frame(width: 150, height: 30)
-                                .foregroundStyle(Color.black)
-                                .shadow(radius: 5)
-                            Text("Next")
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color.champagnePink)
-                                .font(.headline)
-                        }
-                        .onTapGesture {
-                            // Update the user before navigating
+                    // NavigationLink to Boost Happy
+//                    NavigationLink(destination: _BoostHappy()) {
+                        Button(action: {
+                    // Update the user before navigating
                             if let currentUser = user.first {
                                 updateName(user: currentUser)
                             }
+                        }) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 150, height: 30)
+                                    .foregroundStyle(Color.black)
+                                    .shadow(radius: 5)
+                                Text("Next")
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color.champagnePink)
+                                    .font(.headline)
+                            }
                         }
-
-                    }
+//                    }
+//                    NavigationLink(destination: _BoostHappy()) {
+//                        ZStack {
+//                            RoundedRectangle(cornerRadius: 10)
+//                                .frame(width: 150, height: 30)
+//                                .foregroundStyle(Color.black)
+//                                .shadow(radius: 5)
+//                            Text("Next")
+//                                .fontWeight(.bold)
+//                                .foregroundStyle(Color.champagnePink)
+//                                .font(.headline)
+//                        }
+//                        .onTapGesture {
+//                            // Update the user before navigating
+//                            if let currentUser = user.first {
+//                                updateName(user: currentUser)
+//                            }
+//                        }
+//
+//                    }
                 }
                 .padding(50)
+            }
+            .navigationDestination(isPresented: $updateCompleted) {
+                _BoostHappy()
             }
         }
     }
@@ -83,7 +107,7 @@ struct _WhatsYourName: View {
             try modelContext.save()
 
             // DB
-            guard let url = URL(string: "https://sonant.net/api/user/\(userId)") else {
+            guard let url = URL(string: "https://sonant.net/api/user/update") else {
                 print("Invalid URL")
                 return
             }
@@ -113,7 +137,6 @@ struct _WhatsYourName: View {
                     print("Error making request:", error)
                     return
                 }
-                
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
                     print("Unexpected response:", response ?? "No response")
                     return
@@ -123,6 +146,8 @@ struct _WhatsYourName: View {
                     print("Response body: \(responseBody)")
                 }
             }
+            
+            updateCompleted = true
             
             task.resume()
             
