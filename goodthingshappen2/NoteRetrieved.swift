@@ -14,12 +14,12 @@ struct NoteRetrieved: Codable, Identifiable {
     let imageurl: String
     let publicpost: Bool
     let ownerid: String
-    let likes: Likes
+    let likes: [String]
     let createdat: String
     let updatedat: String
     let username: String
 }
 
 struct Likes: Codable {
-    let data: [UInt8]
+    let data: [String]
 }

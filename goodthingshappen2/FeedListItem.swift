@@ -60,7 +60,7 @@ struct FeedListItem: View {
                         }
                         
                         // Display the number of likes
-                        Text("\(likes.count)")
+                        Text("\(note.likes.count)")
                             .foregroundStyle(.black)
                             .padding([.trailing], 15)
                     
@@ -85,19 +85,80 @@ struct FeedListItem: View {
     
     // Function to handle toggling likes
     func toggleLike(for userId: String) {
-        if userHasLikedPost {
-            // Remove like
-            likes.removeAll { like in like == userId }
+        if (note.likes.contains(userId)) {
+            // remove userId
+            var currentLikes = note.likes // This an array of Strings
+            var updatedLikes = currentLikes.filter {
+                $0 != userId
+            }
+            updateLikesInDB(likesToSend: updatedLikes)
         } else {
-            // Add like
-            likes.append(userId)
+            // append userId
+            var currentLikes = note.likes
+            var updatedLikes = currentLikes + [userId]
+            
+            updateLikesInDB(likesToSend: updatedLikes)
         }
+        
+//        if userHasLikedPost {
+//            // Remove like
+//            likes.removeAll { like in like == userId }
+//        } else {
+//            // Add like
+//            likes.append(userId)
+//        }
         
         // Update the state
         userHasLikedPost.toggle()
     }
+    
+    func updateLikesInDB(likesToSend: [String]) {
+        let noteId = note.id
+        
+        guard let url = URL(string: "https://sonant.net/api/notes/update") else {
+            print("Invalid URL")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+            print("Note ID: \(noteId)")
+            print("Likes: \(likesToSend)")
+
+        let note = [
+            "id": noteId,
+            "likes": likesToSend
+        ] as [String : Any]
+        
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: note, options: [])
+        } catch {
+            print("Error serializing JSON:", error)
+            return
+        }
+        
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error making request:", error)
+                return
+            }
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Unexpected response:", response ?? "No response")
+                return
+            }
+            
+            if let data = data, let responseBody = String(data: data, encoding: .utf8) {
+                print("Response body: \(responseBody)")
+            }
+        }
+        
+        task.resume()
+    }
 }
 
 #Preview {
-    FeedListItem(note: NoteRetrieved(id: "4242", posttitle: "Sample Title that has a bunch of text and this is eve", postbody: "Sample Body witha a bit more text faadsfadsf", imageurl: "", publicpost: false, ownerid: UUID().uuidString, likes: Likes(data: [123, 125]), createdat: "100", updatedat: "20", username: "Hello"))
+    FeedListItem(note: NoteRetrieved(id: "4242", posttitle: "Sample Title that has a bunch of text and this is eve", postbody: "Sample Body witha a bit more text faadsfadsf", imageurl: "", publicpost: false, ownerid: UUID().uuidString, likes: [], createdat: "100", updatedat: "20", username: "Hello"))
 }

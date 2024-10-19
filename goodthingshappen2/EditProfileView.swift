@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseAuth
 
 struct EditProfileView: View {
     @Environment(\.modelContext) var modelContext
@@ -92,6 +93,52 @@ struct EditProfileView: View {
             let userState = UserState(id: user.id, name: name, email: email, profileImg: "")
             userManager.setUser(user: userState)
             // DB
+            guard let userId = Auth.auth().currentUser?.uid else {
+                print("couldn't get userId")
+                return
+            }
+            
+            guard let url = URL(string: "https://sonant.net/api/user/update") else {
+                print("Invalid URL")
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            
+            print("User ID: \(userId)")
+            print("Name: \(name)")
+
+            let user = [
+                "id": userId,
+                "name": name
+            ] as [String : Any]
+            
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: user, options: [])
+            } catch {
+                print("Error serializing JSON:", error)
+                return
+            }
+            
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error making request:", error)
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                    print("Unexpected response:", response ?? "No response")
+                    return
+                }
+                
+                if let data = data, let responseBody = String(data: data, encoding: .utf8) {
+                    print("Response body: \(responseBody)")
+                }
+            }
+            
+            task.resume()
             
         } catch {
             print("Error saving updated user: \(error)")

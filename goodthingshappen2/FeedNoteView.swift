@@ -51,7 +51,7 @@ struct FeedNoteView: View {
 
 #Preview {
     // Create an example note
-    let example = NoteRetrieved(id: "4242", posttitle: "Sample Title that has a bunch of text and this is eve", postbody: "Sample Body witha a bit more text faadsfadsf", imageurl: "", publicpost: false, ownerid: UUID().uuidString, likes: Likes(data: [123, 125]), createdat: "100", updatedat: "20", username: "Hello")
+    let example = NoteRetrieved(id: "4242", posttitle: "Sample Title that has a bunch of text and this is eve", postbody: "Sample Body witha a bit more text faadsfadsf", imageurl: "", publicpost: false, ownerid: UUID().uuidString, likes: [], createdat: "100", updatedat: "20", username: "Hello")
     
     // Configure the model container
     FeedNoteView(note: example)
