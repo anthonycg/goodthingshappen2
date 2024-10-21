@@ -85,37 +85,25 @@ struct FeedListItem: View {
     
     // Function to handle toggling likes
     func toggleLike(for userId: String) {
-        if (note.likes.contains(userId)) {
+        var currentLikes = note.likes
+        
+        if (currentLikes.contains(userId)) {
             // remove userId
-            var currentLikes = note.likes // This an array of Strings
-            var updatedLikes = currentLikes.filter {
+            currentLikes = currentLikes.filter {
                 $0 != userId
             }
-            updateLikesInDB(likesToSend: updatedLikes)
         } else {
             // append userId
-            var currentLikes = note.likes
-            var updatedLikes = currentLikes + [userId]
-            
-            updateLikesInDB(likesToSend: updatedLikes)
+            currentLikes.append(userId)
         }
+        updateLikesInDB(likesToSend: currentLikes)
         
-//        if userHasLikedPost {
-//            // Remove like
-//            likes.removeAll { like in like == userId }
-//        } else {
-//            // Add like
-//            likes.append(userId)
-//        }
-        
-        // Update the state
         userHasLikedPost.toggle()
     }
     
     func updateLikesInDB(likesToSend: [String]) {
         let noteId = note.id
-        
-        guard let url = URL(string: "https://sonant.net/api/notes/update") else {
+        guard let url = URL(string: "https://sonant.net/api/notes/updateLikes") else {
             print("Invalid URL")
             return
         }

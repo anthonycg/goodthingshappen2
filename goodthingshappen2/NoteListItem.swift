@@ -33,14 +33,14 @@ struct NoteListItem: View {
                     )
                     .frame(maxWidth: .infinity, minHeight: 265, maxHeight: 265) // Maintain the frame
                 
-                HStack {
-                    Text(isPublic ? "Public" : "Private")
-                        .frame(width: 70)
-                        .font(.headline)
-                        .foregroundColor(isPublic ? .green : .red)
-                        .background(RoundedRectangle(cornerRadius: 5).fill(isPublic ? Color.green.opacity(0.3) : Color.red.opacity(0.3)))
-                        .offset(x: 135, y: -90)
-                }
+//                HStack {
+//                    Text(isPublic ? "Public" : "Private")
+//                        .frame(width: 70)
+//                        .font(.headline)
+//                        .foregroundColor(isPublic ? .green : .red)
+//                        .background(RoundedRectangle(cornerRadius: 5).fill(isPublic ? Color.green.opacity(0.3) : Color.red.opacity(0.3)))
+//                        .offset(x: 135, y: -90)
+//                }
 
                 VStack(alignment: .leading) {
                     Text(note.postTitle.isEmpty ? "Untitled" : note.postTitle)
