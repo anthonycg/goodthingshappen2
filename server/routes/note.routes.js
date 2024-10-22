@@ -13,7 +13,10 @@ router.get("/", notesController.getNotes);
 router.get("/:id", notesController.getNoteById);
 
 // Route for updating a note
-router.put("/:id", notesController.updateNote);
+router.put("/update", notesController.updateNote);
+
+// Route for toggling a like
+router.put("/updateLikes", notesController.updateLikes);
 
 // Route for deleting a note
 router.delete("/:id", notesController.deleteNote);

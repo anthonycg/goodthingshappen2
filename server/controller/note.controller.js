@@ -62,6 +62,27 @@ const updateNote = async (req, res) => {
     }
 };
 
+// Update likes for a note
+const updateLikes = async (req, res) => {
+    const { likes, id } = req.body;
+
+    try {
+        const updatedNote = await pool.query(
+            "UPDATE notes SET likes = $1, updatedAt = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *",
+            [likes, id]
+        );
+
+        if (updatedNote.rows.length === 0) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+
+        res.json(updatedNote.rows[0]);
+    } catch (err) {
+        console.error("Error updating likes:", err);
+        res.status(500).json({ error: err.message });
+    }
+};
+
 // Delete a note
 const deleteNote = async (req, res) => {
     const { id } = req.params;
@@ -84,5 +105,6 @@ module.exports = {
     getNotes,
     getNoteById,
     updateNote,
+    updateLikes,
     deleteNote,
 };
