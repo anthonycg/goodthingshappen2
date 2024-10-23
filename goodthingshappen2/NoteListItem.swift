@@ -13,6 +13,7 @@ struct NoteListItem: View {
     @State var isEditingNote: Bool = false
     @State var uiImage: Image?
     @State var isPublic: Bool = false
+    @State var showAlert: Bool = false
 
     var body: some View {
             ZStack {
@@ -90,6 +91,13 @@ struct NoteListItem: View {
         .sheet(isPresented: $isEditingNote) {
             EditNoteView(note: note)
         }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Post Public!"),
+                message: Text("Your post is now public."),
+                dismissButton: .default(Text("Got it"))
+            )
+        }
 
     }
     func makePostPublic() {
@@ -118,7 +126,7 @@ struct NoteListItem: View {
             "id": note.id.uuidString,
             "postTitle": note.postTitle,
             "postBody": note.postBody,
-            "imageUrl": imageBase64String ?? "",
+            "imageUrl": "",
             "likes": [],
             "ownerId": user.uid,
             "publicPost": true
@@ -149,6 +157,12 @@ struct NoteListItem: View {
             }
 
             print("Note created successfully")
+            
+            DispatchQueue.main.async {
+                isPublic = true
+                showAlert = true
+            }
+
         }
         task.resume()
     }

@@ -48,7 +48,7 @@ struct EditProfileView: View {
 
                         TextField("Email", text: $email)
                             .onAppear {
-                                email = firstUser?.email ?? ""
+                                email = Auth.auth().currentUser?.email ?? ""
                             }
                             .disabled(true)
                         Divider()
@@ -64,14 +64,14 @@ struct EditProfileView: View {
 //                        }
 //                        .padding()
 
-                        Button("Contact Us") {
-                            // Open the email client with pre-populated address
-                            if let url = URL(string: "mailto:your-email@example.com") {
-                                UIApplication.shared.open(url)
-                            }
-                        }
-                        .padding()
-                        .buttonStyle(BorderlessButtonStyle())
+//                        Button("Contact Us") {
+//                            // Open the email client with pre-populated address
+//                            if let url = URL(string: "mailto:your-email@example.com") {
+//                                UIApplication.shared.open(url)
+//                            }
+//                        }
+//                        .padding()
+//                        .buttonStyle(BorderlessButtonStyle())
 
                         Spacer()
                     }

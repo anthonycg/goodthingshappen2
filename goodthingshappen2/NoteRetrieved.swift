@@ -21,5 +21,5 @@ struct NoteRetrieved: Codable, Identifiable {
 }
 
 struct Likes: Codable {
-    let data: [String]
+    let data: [UInt8]
 }

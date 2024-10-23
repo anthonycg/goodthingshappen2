@@ -51,7 +51,7 @@ class FeedViewModel: ObservableObject {
                     self.isLoading = false // Reset loading state
                 }
             } catch {
-                print("Error decoding JSON: \(error.localizedDescription)")
+                print("Error decoding JSON: \(error)")
                 DispatchQueue.main.async {
                     self.isLoading = false
                 }
