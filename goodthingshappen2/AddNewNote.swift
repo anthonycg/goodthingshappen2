@@ -8,6 +8,8 @@
 import SwiftUI
 import SwiftData
 import FirebaseAuth
+import RevenueCatUI
+import RevenueCat
 
 struct AddNewNote: View {
     @Environment(\.dismiss) var dismiss
@@ -20,6 +22,9 @@ struct AddNewNote: View {
     @State var isShowingImagePicker: Bool = false
     @State var inputImage: UIImage?
     @State var image: Image?
+    @State var showPaywall: Bool = false
+    
+    @EnvironmentObject var subscriptionManager: SubscriptionManager
     
     var body: some View {
         ZStack {
@@ -65,7 +70,11 @@ struct AddNewNote: View {
 
                         HStack(spacing: 30) {
                             Button(action: {
-                                isShowingImagePicker = true
+                                if subscriptionManager.isPremium {
+                                    isShowingImagePicker = true
+                                } else {
+                                   showPaywall = true
+                                }
                             }) {
                                 Image(systemName: "camera")
                                     .font(.system(size: 20))
@@ -73,7 +82,9 @@ struct AddNewNote: View {
                             }
                             
                             Button(action: {
-                               saveNote()
+                                Task {
+                                       await saveNote()
+                                   }
                             }) {
                                 Image(systemName: "checkmark.circle")
                                     .font(.system(size: 20))
@@ -106,13 +117,16 @@ struct AddNewNote: View {
                 .sheet(isPresented: $isShowingImagePicker) {
                     ImagePicker(image: $inputImage)
                 }
+                .sheet(isPresented: $showPaywall) {
+                    PaywallView()
+                }
                 
                 Spacer()
             }
         }
     }
 
-    func saveNote() {
+    func saveNote() async {
         guard !postTitle.isEmpty, !postBody.isEmpty else {
             print("Title and body cannot be empty")
             return
@@ -134,6 +148,74 @@ struct AddNewNote: View {
         } catch {
             print("Failed to insert note")
         }
+        
+        //If user is subscribed, save note to DB
+        do {
+            let customerInfo = try await Purchases.shared.customerInfo()
+            if customerInfo.entitlements["premium"]?.isActive == true {
+                guard let url = URL(string: "https://sonant.net/api/notes/create") else {
+                    print("Invalid URL")
+                    return
+                }
+                
+                guard let user = Auth.auth().currentUser else {
+                    print("Error: User not authenticated")
+                    return
+                }
+                
+                var imageBase64String: String? = nil
+                if let imageData = note.imageURL {
+                    imageBase64String = imageData.base64EncodedString() // Convert image data to base64
+                }
+
+                var request = URLRequest(url: url)
+                request.httpMethod = "POST"
+                print("Note ID: \(note.id)")
+                print("Post Title: \(note.postTitle)")
+
+                let note = [
+                    "id": note.id.uuidString,
+                    "postTitle": note.postTitle,
+                    "postBody": note.postBody,
+                    "imageUrl": "",
+                    "likes": [],
+                    "ownerId": user.uid,
+                    "publicPost": true
+                ] as [String : Any]
+                
+                do {
+                    request.httpBody = try JSONSerialization.data(withJSONObject: note, options: [])
+                } catch {
+                    print("Error serializing JSON:", error)
+                    return
+                }
+                
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    if let error = error {
+                        print("Error making request:", error)
+                        return
+                    }
+
+                    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                        print("Unexpected response:", response ?? "No response")
+                        return
+                    }
+                    
+                    if let data = data, let responseBody = String(data: data, encoding: .utf8) {
+                        print("Response body: \(responseBody)")
+                    }
+
+                    print("Note created successfully")
+
+                }
+                task.resume()
+            }
+        } catch {
+            // handle error
+        }
+        
         
         // Reset the inputImage and other states
         inputImage = nil

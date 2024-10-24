@@ -29,6 +29,7 @@ struct goodthingshappen2App: App {
     
     @StateObject var appState = AppState()
     @StateObject var userManager = UserManager()
+    @StateObject private var subscriptionManager = SubscriptionManager()
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
@@ -51,6 +52,7 @@ struct goodthingshappen2App: App {
         WindowGroup {
             ContentView()
                 .environmentObject(appState)
+                .environmentObject(subscriptionManager)
                 .environmentObject(userManager)
                 .onAppear {
                     userManager.initializeUser()
