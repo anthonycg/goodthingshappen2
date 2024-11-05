@@ -4,10 +4,33 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Promises (Playground).xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 		<key>goodthingshappen2.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>4</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>152CE5FE2C9F52CD00DCB5F7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>152CE6102C9F52D000DCB5F7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>152CE61A2C9F52D000DCB5F7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

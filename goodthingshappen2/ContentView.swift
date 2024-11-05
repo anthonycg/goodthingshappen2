@@ -45,6 +45,11 @@ struct ContentView: View {
                         Label("Profile", systemImage: "person.icloud.fill")
                     }
             }
+            .onAppear() {
+                UITabBar.appearance().barTintColor = UIColor(.champagnePink)
+                UITabBar.appearance().backgroundColor = UIColor(.champagnePink)
+            }
+            .background(Color.champagnePink)
             .fullScreenCover(isPresented: $showPaywall) {
                 PaywallView( displayCloseButton: true, performRestore: {
                     await performRestore() // Call the async function

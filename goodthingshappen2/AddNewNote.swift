@@ -42,10 +42,8 @@ struct AddNewNote: View {
             VStack {
                 TextField("Title your day...", text: $postTitle, axis: .vertical)
                     .font(.system(size: 40))
-                    .lineLimit(3)
+                    .lineLimit(2)
                     .padding([.leading, .trailing])
-                
-                Spacer()
                 
                 VStack {
                     VStack(alignment: .leading, spacing: 2) {
@@ -63,7 +61,8 @@ struct AddNewNote: View {
                         VStack {
                             TextField("Write about the details of today...", text: $postBody, axis: .vertical)
                                 .lineLimit(16)
-                                .padding([.top, .bottom], 30)
+                                .padding([.top], 10)
+                                .padding([.bottom], 5)
                                 .background(Color.green.opacity(0))
                                 .cornerRadius(10)
                         }
@@ -74,6 +73,8 @@ struct AddNewNote: View {
                                     isShowingImagePicker = true
                                 } else {
                                    showPaywall = true
+                                }; Task {
+                                    await saveNote() // Call the async saveNote function
                                 }
                             }) {
                                 Image(systemName: "camera")
@@ -118,10 +119,8 @@ struct AddNewNote: View {
                     ImagePicker(image: $inputImage)
                 }
                 .sheet(isPresented: $showPaywall) {
-                    PaywallView()
+                    PaywallView(displayCloseButton: true)
                 }
-                
-                Spacer()
             }
         }
     }

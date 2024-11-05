@@ -16,6 +16,7 @@ struct MyNotesView: View {
     @Query var user: [User5]
     @State var isAddingNewNote: Bool = false
     @State var isShowingPaywall: Bool = false
+    @State private var isSubscribed: Bool = false // New state for subscription status
     
     @EnvironmentObject var userManager: UserManager
     
@@ -27,8 +28,10 @@ struct MyNotesView: View {
                 VStack {
                     HStack {
                         Image(systemName: "figure.wave.circle.fill")
+                            .foregroundStyle(.black)
                         Text("Hello, \(user.first?.name ?? "Hello there")")
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(.black)
                     }
                     .padding()
                     
@@ -38,7 +41,7 @@ struct MyNotesView: View {
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    // Use a VStack instead of List
+                    // Display notes
                     VStack {
                         ForEach(notes.reversed()) { note in
                             NoteListItem(note: note)
@@ -54,27 +57,29 @@ struct MyNotesView: View {
                 HStack {
                     Spacer()
                     
-                    // "Try Premium" button
-                    Button(action: {
-                        isShowingPaywall = true
-                    }) {
-                        HStack {
-                            Image(systemName: "sparkles")
-                                .font(.system(size: 16))
-                            Text("Try Premium")
-                                .font(.system(size: 16, weight: .semibold))
+                    // "Try Premium" button, shown only if not subscribed
+                    if !isSubscribed {
+                        Button(action: {
+                            isShowingPaywall = true
+                        }) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 16))
+                                Text("Try Premium")
+                                    .font(.system(size: 16, weight: .semibold))
+                            }
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(Color.promPink)
+                            .clipShape(Capsule())
+                            .shadow(color: Color.pinkLace, radius: 10)
                         }
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(Color.promPink)
-                        .clipShape(Capsule())
-                        .shadow(color: Color.pinkLace, radius: 4, y: 12)
+                        .sheet(isPresented: $isShowingPaywall) {
+                            PaywallView(displayCloseButton: true)
+                        }
+                        .padding(.trailing, 10)
                     }
-                    .sheet(isPresented: $isShowingPaywall) {
-                        PaywallView(displayCloseButton: true)
-                    }
-                    .padding(.trailing, 10)
                     
                     // Plus button
                     Button(action: {
@@ -89,11 +94,25 @@ struct MyNotesView: View {
                             .shadow(radius: 10)
                     }
                     .fullScreenCover(isPresented: $isAddingNewNote) {
-                        // Consider adding parameters if necessary
                         AddNewNote(postTitle: "", postBody: "")
                     }
                     .padding()
                 }
+            }
+        }
+        .onAppear {
+            fetchSubscriptionStatus()
+        }
+    }
+    
+    // Check the user's subscription status with RevenueCat
+    func fetchSubscriptionStatus() {
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            if let error = error {
+                print("Error fetching subscription status: \(error)")
+            } else if let customerInfo = customerInfo {
+                // Check if the user is subscribed
+                isSubscribed = customerInfo.entitlements["premium"]?.isActive == true
             }
         }
     }

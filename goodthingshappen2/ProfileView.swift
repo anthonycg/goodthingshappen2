@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import SwiftData
+import RevenueCat
 
 struct ProfileView: View {
     @State var isEditProfileShowing: Bool = false
@@ -16,6 +17,7 @@ struct ProfileView: View {
     @Query var user: [User5]
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var userManager: UserManager
+    @State private var isSubscribed: Bool = false // New state for subscription status
     
     var body: some View {
         ZStack {
@@ -33,10 +35,12 @@ struct ProfileView: View {
                 Text("Good Things Happen for")
                     .font(.title3)
                     .padding(.top, 8)
+                    .foregroundStyle(.black)
                 
                 Text("\(user.first?.name ?? "You")")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundStyle(.black)
                 
                 // Edit Profile Button
                 Button(action: {
@@ -60,6 +64,7 @@ struct ProfileView: View {
                 // Additional Information
                 Text("Good Things written | \(notes.count)")
                     .padding(.bottom, 10)
+                    .foregroundStyle(.black)
                 
                 // Contact Us and Logout Buttons
                 HStack {
@@ -90,6 +95,21 @@ struct ProfileView: View {
                 Spacer()
             }
             .padding(.top, 40)
+        }
+        .onAppear {
+            fetchSubscriptionStatus()
+        }
+    }
+    
+    // Check the user's subscription status with RevenueCat
+    func fetchSubscriptionStatus() {
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            if let error = error {
+                print("Error fetching subscription status: \(error)")
+            } else if let customerInfo = customerInfo {
+                // Check if the user is subscribed
+                isSubscribed = customerInfo.entitlements["premium"]?.isActive == true
+            }
         }
     }
     

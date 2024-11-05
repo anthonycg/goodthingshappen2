@@ -36,14 +36,19 @@ struct _WhatsYourName: View {
                     HStack {
                         Image(systemName: "circle.fill")
                             .font(.system(size: 10))
+                            .foregroundStyle(.black)
                         Image(systemName: "circle")
                             .font(.system(size: 10))
+                            .foregroundStyle(.black)
                         Image(systemName: "circle")
                             .font(.system(size: 10))
+                            .foregroundStyle(.black)
                         Image(systemName: "circle")
                             .font(.system(size: 10))
+                            .foregroundStyle(.black)
                         Image(systemName: "circle")
                             .font(.system(size: 10))
+                            .foregroundStyle(.black)
                     }
                     .padding([.bottom], 20)
                     

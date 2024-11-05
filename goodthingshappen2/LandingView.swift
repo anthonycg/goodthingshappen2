@@ -37,8 +37,10 @@ struct LandingView: View {
                         Text("Good Things are happening")
                             .bold()
                             .font(.largeTitle)
+                            .foregroundStyle(.black)
                         Text("You should start taking note.")
                             .font(.body)
+                            .foregroundStyle(.black)
                         
                         Spacer()
                         
