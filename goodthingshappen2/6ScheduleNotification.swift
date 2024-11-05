@@ -11,7 +11,7 @@ import UserNotifications
 struct _ScheduleNotification: View {
     @State private var selectedDate = Date()
     @EnvironmentObject var appState: AppState
-
+    @State var isShowingPaywall: Bool
     var body: some View {
         NavigationStack {
             ZStack {
@@ -20,12 +20,14 @@ struct _ScheduleNotification: View {
                     Text("What time would you like to be reminded to write your Good Thing?")
                         .font(.title)
                         .padding()
+                        .foregroundStyle(.black)
 
                     DatePicker("Select Time", selection: $selectedDate, displayedComponents: .hourAndMinute)
                         .padding()
+                        .foregroundStyle(.black)
 
                     // Remind me button
-                    NavigationLink(destination: MyNotesView()) {
+                    NavigationLink(destination: MyNotesView( isShowingPaywall: $isShowingPaywall)) {
                         Button(action: {
                             requestNotificationAuthorization()
                             scheduleNotification(at: selectedDate)
@@ -46,7 +48,7 @@ struct _ScheduleNotification: View {
                     }
 
                     // Skip button
-                    NavigationLink(destination: MyNotesView()) {
+                    NavigationLink(destination: MyNotesView( isShowingPaywall: $isShowingPaywall)) {
                         ZStack {
                             Text("Skip")
                                 .fontWeight(.light)
@@ -95,5 +97,6 @@ struct _ScheduleNotification: View {
 }
 
 #Preview {
-    _ScheduleNotification()
+    @Previewable @State var isShowingPaywall2 = false
+    return _ScheduleNotification(isShowingPaywall: isShowingPaywall2)
 }

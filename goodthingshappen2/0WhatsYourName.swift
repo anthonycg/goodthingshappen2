@@ -29,6 +29,7 @@ struct _WhatsYourName: View {
                         .padding([.bottom], 20)
                     
                     TextField("Enter your name", text: $name)
+                        .foregroundStyle(.black)
                     
                     Divider()
                         .padding([.bottom], 40)

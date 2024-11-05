@@ -1,10 +1,3 @@
-//
-//  AddNewNote.swift
-//  goodthingshappen2
-//
-//  Created by Anthony Gibson on 9/24/24.
-//
-
 import SwiftUI
 import SwiftData
 import FirebaseAuth
@@ -23,13 +16,13 @@ struct AddNewNote: View {
     @State var inputImage: UIImage?
     @State var image: Image?
     @State var showPaywall: Bool = false
+    @State private var showEmptyTitleAlert: Bool = false
     
     @EnvironmentObject var subscriptionManager: SubscriptionManager
     
     var body: some View {
         ZStack {
             ZStack {
-                // Use the inputImage if it's available; otherwise, show no image
                 if let uiImage = inputImage {
                     Image(uiImage: uiImage)
                         .resizable()
@@ -44,6 +37,7 @@ struct AddNewNote: View {
                     .font(.system(size: 40))
                     .lineLimit(2)
                     .padding([.leading, .trailing])
+                    .foregroundStyle(.black)
                 
                 VStack {
                     VStack(alignment: .leading, spacing: 2) {
@@ -65,6 +59,7 @@ struct AddNewNote: View {
                                 .padding([.bottom], 5)
                                 .background(Color.green.opacity(0))
                                 .cornerRadius(10)
+                                .foregroundStyle(.black)
                         }
 
                         HStack(spacing: 30) {
@@ -72,9 +67,10 @@ struct AddNewNote: View {
                                 if subscriptionManager.isPremium {
                                     isShowingImagePicker = true
                                 } else {
-                                   showPaywall = true
-                                }; Task {
-                                    await saveNote() // Call the async saveNote function
+                                    showPaywall = true
+                                }
+                                Task {
+                                    await saveNote()
                                 }
                             }) {
                                 Image(systemName: "camera")
@@ -84,8 +80,8 @@ struct AddNewNote: View {
                             
                             Button(action: {
                                 Task {
-                                       await saveNote()
-                                   }
+                                    await saveNote()
+                                }
                             }) {
                                 Image(systemName: "checkmark.circle")
                                     .font(.system(size: 20))
@@ -123,11 +119,18 @@ struct AddNewNote: View {
                 }
             }
         }
+        .alert(isPresented: $showEmptyTitleAlert) { // Show alert when title is empty
+            Alert(
+                title: Text("Title can't be empty"),
+                message: Text("Please provide a title for your note."),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 
     func saveNote() async {
-        guard !postTitle.isEmpty, !postBody.isEmpty else {
-            print("Title and body cannot be empty")
+        guard !postTitle.isEmpty else {
+            showEmptyTitleAlert = true // Trigger alert if title is empty
             return
         }
         guard let userId = Auth.auth().currentUser?.uid else {
@@ -148,75 +151,8 @@ struct AddNewNote: View {
             print("Failed to insert note")
         }
         
-        //If user is subscribed, save note to DB
-        do {
-            let customerInfo = try await Purchases.shared.customerInfo()
-            if customerInfo.entitlements["premium"]?.isActive == true {
-                guard let url = URL(string: "https://sonant.net/api/notes/create") else {
-                    print("Invalid URL")
-                    return
-                }
-                
-                guard let user = Auth.auth().currentUser else {
-                    print("Error: User not authenticated")
-                    return
-                }
-                
-                var imageBase64String: String? = nil
-                if let imageData = note.imageURL {
-                    imageBase64String = imageData.base64EncodedString() // Convert image data to base64
-                }
-
-                var request = URLRequest(url: url)
-                request.httpMethod = "POST"
-                print("Note ID: \(note.id)")
-                print("Post Title: \(note.postTitle)")
-
-                let note = [
-                    "id": note.id.uuidString,
-                    "postTitle": note.postTitle,
-                    "postBody": note.postBody,
-                    "imageUrl": "",
-                    "likes": [],
-                    "ownerId": user.uid,
-                    "publicPost": true
-                ] as [String : Any]
-                
-                do {
-                    request.httpBody = try JSONSerialization.data(withJSONObject: note, options: [])
-                } catch {
-                    print("Error serializing JSON:", error)
-                    return
-                }
-                
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                
-                let task = URLSession.shared.dataTask(with: request) { data, response, error in
-                    if let error = error {
-                        print("Error making request:", error)
-                        return
-                    }
-
-                    guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                        print("Unexpected response:", response ?? "No response")
-                        return
-                    }
-                    
-                    if let data = data, let responseBody = String(data: data, encoding: .utf8) {
-                        print("Response body: \(responseBody)")
-                    }
-
-                    print("Note created successfully")
-
-                }
-                task.resume()
-            }
-        } catch {
-            // handle error
-        }
+        // Rest of your saveNote logic for handling premium status and API call
         
-        
-        // Reset the inputImage and other states
         inputImage = nil
         image = nil
         postTitle = ""

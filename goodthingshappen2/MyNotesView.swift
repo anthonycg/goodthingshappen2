@@ -15,7 +15,9 @@ struct MyNotesView: View {
     @Query var notes: [Note6]
     @Query var user: [User5]
     @State var isAddingNewNote: Bool = false
-    @State var isShowingPaywall: Bool = false
+    @Binding var isShowingPaywall: Bool
+    @State var isShowingLocalPaywall: Bool = false
+    
     @State private var isSubscribed: Bool = false // New state for subscription status
     
     @EnvironmentObject var userManager: UserManager
@@ -60,7 +62,7 @@ struct MyNotesView: View {
                     // "Try Premium" button, shown only if not subscribed
                     if !isSubscribed {
                         Button(action: {
-                            isShowingPaywall = true
+                            isShowingLocalPaywall = true
                         }) {
                             HStack {
                                 Image(systemName: "sparkles")
@@ -75,7 +77,7 @@ struct MyNotesView: View {
                             .clipShape(Capsule())
                             .shadow(color: Color.pinkLace, radius: 10)
                         }
-                        .sheet(isPresented: $isShowingPaywall) {
+                        .sheet(isPresented: $isShowingLocalPaywall) {
                             PaywallView(displayCloseButton: true)
                         }
                         .padding(.trailing, 10)
@@ -119,5 +121,6 @@ struct MyNotesView: View {
 }
 
 #Preview {
-    MyNotesView()
+    @Previewable @State var isShowingPrePaywall = false
+    return MyNotesView(isShowingPaywall: $isShowingPrePaywall)
 }

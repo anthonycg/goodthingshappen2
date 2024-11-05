@@ -19,13 +19,13 @@ struct ContentView: View {
     
     @State private var showPaywall = false
     @State private var hasPremium: Bool = false
-
+    @State private var isShowingPaywall: Bool = false
     var body: some View {
         if !appState.isLoggedIn {
             LandingView()
         } else {
             TabView {
-                MyNotesView()
+                MyNotesView( isShowingPaywall: $isShowingPaywall)
                     .tabItem {
                         Label("Notes", systemImage: "note.text")
                     }
