@@ -89,12 +89,17 @@ struct MyNotesView: View {
                     }) {
                         Image(systemName: "plus")
                             .font(.system(size: 24))
-                            .foregroundColor(.white)
+                            .foregroundColor(.black)
                             .padding()
                             .background(Color.teaGreen)
                             .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color.black, lineWidth: 2)
+                            )
                             .shadow(radius: 10)
                     }
+
                     .fullScreenCover(isPresented: $isAddingNewNote) {
                         AddNewNote(postTitle: "", postBody: "")
                     }

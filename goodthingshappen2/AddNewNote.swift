@@ -33,11 +33,21 @@ struct AddNewNote: View {
             }
             
             VStack {
-                TextField("Title your day...", text: $postTitle, axis: .vertical)
-                    .font(.system(size: 40))
-                    .lineLimit(2)
-                    .padding([.leading, .trailing])
-                    .foregroundStyle(.black)
+                ZStack(alignment: .topLeading) {
+                    if postTitle.isEmpty {
+                        Text("Title your day...")
+                            .foregroundColor(.black).opacity(0.3) // Set placeholder text color
+                            .font(.custom("HelveticaNeue", size: 48))
+                            .padding(.horizontal)
+                            .padding(.top, 8)
+                    }
+                    
+                    TextField("", text: $postTitle, axis: .vertical)
+                        .font(.system(size: 40))
+                        .lineLimit(2)
+                        .padding([.leading, .trailing])
+                        .foregroundStyle(.black)
+                }
                 
                 VStack {
                     VStack(alignment: .leading, spacing: 2) {
@@ -53,13 +63,22 @@ struct AddNewNote: View {
                         .padding(.top, 10)
 
                         VStack {
-                            TextField("Write about the details of today...", text: $postBody, axis: .vertical)
-                                .lineLimit(16)
-                                .padding([.top], 10)
-                                .padding([.bottom], 5)
-                                .background(Color.green.opacity(0))
-                                .cornerRadius(10)
-                                .foregroundStyle(.black)
+                            ZStack(alignment: .topLeading) {
+                                if postBody.isEmpty {
+                                    Text("Write about the details of today...")
+                                        .foregroundColor(.black).opacity(0.3)
+                                        .font(.custom("HelveticaNeue", size: 20))
+                                        .padding(.horizontal)
+                                        .padding(.top, 8)
+                                }
+                                TextField("", text: $postBody, axis: .vertical)
+                                    .lineLimit(16)
+                                    .padding([.top], 10)
+                                    .padding([.bottom], 5)
+                                    .background(Color.green.opacity(0))
+                                    .cornerRadius(10)
+                                    .foregroundStyle(.black)
+                            }
                         }
 
                         HStack(spacing: 30) {
