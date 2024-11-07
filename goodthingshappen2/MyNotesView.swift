@@ -18,8 +18,7 @@ struct MyNotesView: View {
     @Binding var isShowingPaywall: Bool
     @State var isShowingLocalPaywall: Bool = false
     
-    @State private var isSubscribed: Bool = false // New state for subscription status
-    
+    @State private var isSubscribed: Bool = false
     @EnvironmentObject var userManager: UserManager
     
     var body: some View {
@@ -31,7 +30,8 @@ struct MyNotesView: View {
                     HStack {
                         Image(systemName: "figure.wave.circle.fill")
                             .foregroundStyle(.black)
-                        Text("Hello, \(user.first?.name ?? "Hello there")")
+                            .font(.system(size: 20))
+                        Text(((user.first?.name) != nil) ? "Hello, \(user.first?.name ?? "")" : "Hello")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.black)
                     }
@@ -75,7 +75,7 @@ struct MyNotesView: View {
                             .padding(.vertical, 12)
                             .background(Color.promPink)
                             .clipShape(Capsule())
-                            .shadow(color: Color.pinkLace, radius: 10)
+                            .shadow(color: Color.pinkLace, radius: 5)
                         }
                         .sheet(isPresented: $isShowingLocalPaywall) {
                             PaywallView(displayCloseButton: true)
@@ -97,9 +97,8 @@ struct MyNotesView: View {
                                 Circle()
                                     .stroke(Color.black, lineWidth: 2)
                             )
-                            .shadow(radius: 10)
+                            .shadow(color: Color.champagnePink, radius: 5)
                     }
-
                     .fullScreenCover(isPresented: $isAddingNewNote) {
                         AddNewNote(postTitle: "", postBody: "")
                     }

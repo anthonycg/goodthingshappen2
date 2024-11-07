@@ -28,7 +28,7 @@ struct FeedView: View {
                 .padding(.bottom)
                 .onAppear {
                     if viewModel.notes.isEmpty {
-                        viewModel.fetchNotes() // Fetch initial posts
+                        viewModel.fetchNotes()
                     }
                 }
                 .onAppear(perform: loadMoreNotesIfNeeded)

@@ -17,7 +17,7 @@ struct AddNewNote: View {
     @State var image: Image?
     @State var showPaywall: Bool = false
     @State private var showEmptyTitleAlert: Bool = false
-    
+    @State private var isSubscribed: Bool = false
     @EnvironmentObject var subscriptionManager: SubscriptionManager
     
     var body: some View {
@@ -36,7 +36,7 @@ struct AddNewNote: View {
                 ZStack(alignment: .topLeading) {
                     if postTitle.isEmpty {
                         Text("Title your day...")
-                            .foregroundColor(.black).opacity(0.3) // Set placeholder text color
+                            .foregroundColor(.black).opacity(0.3)
                             .font(.custom("HelveticaNeue", size: 48))
                             .padding(.horizontal)
                             .padding(.top, 8)
@@ -83,13 +83,12 @@ struct AddNewNote: View {
 
                         HStack(spacing: 30) {
                             Button(action: {
-                                if subscriptionManager.isPremium {
-                                    isShowingImagePicker = true
+                                if isSubscribed {
+                                    Task {
+                                        await saveNote()
+                                    }
                                 } else {
                                     showPaywall = true
-                                }
-                                Task {
-                                    await saveNote()
                                 }
                             }) {
                                 Image(systemName: "camera")
@@ -127,6 +126,9 @@ struct AddNewNote: View {
                     .padding()
                     .shadow(radius: 10)
                 }
+                .onAppear {
+                    fetchSubscriptionStatus()
+                }
                 .onChange(of: inputImage) {
                     loadImage()
                 }
@@ -138,7 +140,7 @@ struct AddNewNote: View {
                 }
             }
         }
-        .alert(isPresented: $showEmptyTitleAlert) { // Show alert when title is empty
+        .alert(isPresented: $showEmptyTitleAlert) {
             Alert(
                 title: Text("Title can't be empty"),
                 message: Text("Please provide a title for your note."),
@@ -147,9 +149,19 @@ struct AddNewNote: View {
         }
     }
 
+    func fetchSubscriptionStatus() {
+        Purchases.shared.getCustomerInfo { customerInfo, error in
+            if let error = error {
+                print("Error fetching subscription status: \(error)")
+            } else if let customerInfo = customerInfo {
+                isSubscribed = customerInfo.entitlements["premium"]?.isActive == true
+            }
+        }
+    }
+
     func saveNote() async {
         guard !postTitle.isEmpty else {
-            showEmptyTitleAlert = true // Trigger alert if title is empty
+            showEmptyTitleAlert = true
             return
         }
         guard let userId = Auth.auth().currentUser?.uid else {
@@ -169,8 +181,6 @@ struct AddNewNote: View {
         } catch {
             print("Failed to insert note")
         }
-        
-        // Rest of your saveNote logic for handling premium status and API call
         
         inputImage = nil
         image = nil
