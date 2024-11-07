@@ -85,7 +85,7 @@ struct AddNewNote: View {
                             Button(action: {
                                 if isSubscribed {
                                     Task {
-                                        await saveNote()
+                                        isShowingImagePicker = true
                                     }
                                 } else {
                                     showPaywall = true
