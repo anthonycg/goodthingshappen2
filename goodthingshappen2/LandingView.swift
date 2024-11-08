@@ -61,6 +61,21 @@ struct LandingView: View {
                             }
                         )
                         .frame(width: 200, height: 45)
+                        
+                        // Add Privacy Policy and Terms and Conditions links here
+                        HStack {
+                            VStack {
+                                Text("By signing up, you agree to accept the following:")
+                                    .font(.footnote)
+                                Link("Privacy Policy", destination: URL(string: "https://www.termsfeed.com/live/96632b26-b88e-4c0a-a10d-641fd68d5d8c")!)
+                                    .font(.footnote)
+                                    .foregroundColor(.black)
+                                Link("Terms of Use", destination: URL(string: "https://app.websitepolicies.com/policies/view/edzsnqtn")!)
+                                    .font(.footnote)
+                                    .foregroundColor(.black)
+                            }
+                        }
+                        .padding(.top, 10)
                     }
                 }
             }
