@@ -65,7 +65,7 @@ struct LandingView: View {
                 }
             }
             .navigationDestination(isPresented: $isFirstTimeUser) {
-                _WhatsYourName(name: "", email: "")
+                _BoostHappy()
             }
         }
     }
@@ -122,7 +122,7 @@ struct LandingView: View {
                     return
                 }
                 
-                let displayName = "\(appleIDCredential.fullName?.givenName ?? "Guest")"
+                let displayName = "\(appleIDCredential.fullName?.givenName ?? "") \(appleIDCredential.fullName?.familyName ?? "Guest")"
                 let email = user.email ?? ""
                 let userId = user.uid
                 

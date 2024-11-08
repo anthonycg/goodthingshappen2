@@ -23,6 +23,7 @@ struct _ScheduleNotification: View {
                         .foregroundStyle(.black)
 
                     DatePicker("Select Time", selection: $selectedDate, displayedComponents: .hourAndMinute)
+                        .frame(width: 220)
                         .padding()
                         .foregroundStyle(.black)
 
@@ -44,6 +45,7 @@ struct _ScheduleNotification: View {
                                     .foregroundStyle(Color.champagnePink)
                                     .font(.headline)
                             }
+                            .padding([.bottom])
                         }
                     }
 
@@ -53,7 +55,7 @@ struct _ScheduleNotification: View {
                             Text("Skip")
                                 .fontWeight(.light)
                                 .foregroundStyle(Color.black)
-                                .font(.caption)
+                                .font(.callout)
                         }
                     }
                 }
@@ -82,6 +84,7 @@ struct _ScheduleNotification: View {
                 print("Error scheduling notification: \(error)")
             }
         }
+        UserDefaults.standard.set(true, forKey: "LocalNotificationsOn")
     }
 
     private func requestNotificationAuthorization() {

@@ -40,6 +40,7 @@ struct MyNotesView: View {
                     Text("My \nNotes")
                         .foregroundColor(.black)
                         .font(.system(size: 80))
+                        .bold()
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
