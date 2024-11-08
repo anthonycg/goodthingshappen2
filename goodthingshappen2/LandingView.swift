@@ -192,7 +192,6 @@ struct LandingView: View {
             if let data = data, let responseBody = String(data: data, encoding: .utf8) {
                 print("Response body: \(responseBody)")
             }
-
             print("User created successfully")
         }
         task.resume()

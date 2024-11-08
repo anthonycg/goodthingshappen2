@@ -13,6 +13,7 @@ import UserNotifications
 struct EditProfileView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var appState: AppState
     @EnvironmentObject var userManager: UserManager
     @State private var NotificationsOn: Bool = UserDefaults.standard.bool(forKey: "LocalNotificationsOn")
     @Query var users: [User5]
@@ -69,13 +70,27 @@ struct EditProfileView: View {
                     .padding()
 
                     Spacer()
+                    Button("Delete Account", action: {
+                        let user = Auth.auth().currentUser
+
+                        user?.delete { error in
+                          if let error = error {
+                            print("Error deleting account.")
+                          } else {
+                              print("Account deleted: \(user?.uid ?? "")")
+                              appState.isLoggedIn = false
+                              userManager.logout()
+                          }
+                        }
+                    })
+                    .foregroundStyle(Color.red)
                 }
                 .padding()
             }
             .padding()
         }
     }
-
+    
     // Handle the toggle change for local notifications
     func toggleNotifications(_ isEnabled: Bool) {
         UserDefaults.standard.set(isEnabled, forKey: "LocalNotificationsOn")
@@ -98,7 +113,7 @@ struct EditProfileView: View {
     func scheduleLocalNotification() {
         let content = UNMutableNotificationContent()
         content.title = "Reminder"
-        content.body = "Check out the good things that happened today!"
+        content.body = "Don't forget to add your Good Thing for today."
         content.sound = .default
 
         // Trigger the notification to fire daily at a specific time (e.g., 8 PM)
