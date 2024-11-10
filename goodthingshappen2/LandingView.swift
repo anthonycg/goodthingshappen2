@@ -65,8 +65,9 @@ struct LandingView: View {
                         // Add Privacy Policy and Terms and Conditions links here
                         HStack {
                             VStack {
-                                Text("By signing up, you agree to accept the following:")
+                                Text("By signing up, you agree to the following:")
                                     .font(.footnote)
+                                    .foregroundColor(.black)
                                 Link("Privacy Policy", destination: URL(string: "https://www.termsfeed.com/live/96632b26-b88e-4c0a-a10d-641fd68d5d8c")!)
                                     .font(.footnote)
                                     .foregroundColor(.black)
